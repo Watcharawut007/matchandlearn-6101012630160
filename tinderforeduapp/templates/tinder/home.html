@@ -47,12 +47,12 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
                 <li class="nav-item">
-                    <a class="nav-link link text-white display-4" href="{% url 'tinder:students_list' name.id%}">
+                    <a class="nav-link link text-white display-4" href="{% url 'tinder:students_list' user_infomation.id%}">
                         Students and Tutor list
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link link text-white display-4" name = "Match request" href="{% url 'tinder:match_request' name.id %}" {% if name.match_request > 0 %}class="notification"{% endif %}><span>Student request</span>{% if name.match_request > 0 %}<span name= "value_notificate" class="badge">{{ name.match_request }}</span>{% endif %}</a>
+                    <a class="nav-link link text-white display-4" name = "Match request" href="{% url 'tinder:match_request' user_infomation.id %}" {% if user_infomation.match_request > 0 %}class="notification"{% endif %}><span>Student request</span>{% if user_infomation.match_request > 0 %}<span name= "value_notificate" class="badge">{{ user_infomation.match_request }}</span>{% endif %}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link link text-white display-4" href="{% url 'tinder:aboutus' %}">
@@ -71,7 +71,7 @@
                 </li>
             </ul>
             <div class="navbar-buttons mbr-section-btn">
-                <a class="btn btn-sm btn-primary display-4" href="/{{ name.id }}/personal_profile">
+                <a class="btn btn-sm btn-primary display-4" href="/{{ user_infomation.id }}/personal_profile">
                     Profile : {{ user.first_name }}
                 </a>
             </div>
@@ -83,8 +83,8 @@
         <div class="row">
             <div class="mbr-white col-lg-8 col-md-7 content-container">
                 <h1 class="mbr-section-title mbr-bold pb-3 mbr-fonts-style display-1">SEARCH FOR SOMEONE YOU'RE LOOKING FOR</h1>
-                {% for test in test %}
-                <p>this user want to match you : {{ test.request_list }}</p>
+                {% for request in all_request %}
+                <p>this user want to match you : {{ request.request_list }}</p>
                 {% endfor %}
             </div>
             <div class="col-lg-4 col-md-5">

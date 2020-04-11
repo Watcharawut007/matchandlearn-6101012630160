@@ -82,18 +82,18 @@ bg{
 
 <ul>
   <li><a href="/">Home</a></li>
-  <li><a name = "Students and Tutor list" href="{% url 'tinder:students_list' name.id%}">Students and Tutor list</a></li>
-    <li ><a name = "Match request" href="{% url 'tinder:match_request' name.id %}" {% if name.match_request > 0 %}class="notification"{% endif %}><span>Student request</span>{% if name.match_request > 0 %}<span name= "value_notificate" class="badge">{{ name.match_request }}</span>{% endif %}</a></li>
+  <li><a name = "Students and Tutor list" href="{% url 'tinder:students_list' user_infomation.id%}">Students and Tutor list</a></li>
+    <li ><a name = "Match request" href="{% url 'tinder:match_request' user_infomation.id %}" {% if user_infomation.match_request > 0 %}class="notification"{% endif %}><span>Student request</span>{% if user_infomation.match_request > 0 %}<span name= "value_notificate" class="badge">{{ user_infomation.match_request }}</span>{% endif %}</a></li>
     <li><a name = "About us" href="{% url 'tinder:aboutus' %}">About</a></li>
 
     <li><a name = "Privacy Policy" href="{% url 'tinder:privacy' %}">Privacy Policy</a></li>
     <li style="float:right"><a href="{% url 'tinder:logout' %}">Logout</a></li>
     <li style="float:right"><a href="{% url 'tinder:faq' %}">Help</a></li>
-    <li style="float:right"><a href="/{{ name.id }}/personal_profile">Profile : {{ user.first_name }}</a></li>
+    <li style="float:right"><a href="/{{ user_infomation.id }}/personal_profile">Profile : {{ user.first_name }}</a></li>
 </ul>
 <head>
      <table id="good_subject_table">
-    <form action="{% url 'tinder:match_request' name.id %}" method="post">
+    <form action="{% url 'tinder:match_request' user_infomation.id %}" method="post">
     {% for list_match in list_match %}
         <div class="myDiv">
         <div class="subDiv" onclick='location.href="/{{ list_match.id }}/profile_accept"'><h1>{{ list_match.fullname }} {{ list_match.lastname }}</h1><p>Gender : {{ list_match.bio }}</p><p> age: {{ list_match.age  }}</p></div></td>
