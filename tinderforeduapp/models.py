@@ -12,19 +12,19 @@ class Subject(models.Model): #create subject model
         return self.subject_name
 
 
-class request_class(models.Model):#create request model
-    request_list = models.TextField(max_length=200,blank=True)#Collect a name who sent a request
+class Request_Class(models.Model):#create request model
+    who_send = models.TextField(max_length=200, blank=True)#Collect a name who sent a request
     request_message = models.TextField(max_length=600,blank=True)#Collect about me data
-    whorecive = models.TextField(max_length=200,blank=True)#Collect a name who will recive a request
+    who_recive = models.TextField(max_length=200, blank=True)#Collect a name who will recive a request
     def __str__(self):
-        return self.request_list
-class match_class(models.Model):#creat match model
-    who_matched = models.TextField(max_length=200, blank=True) #Collect a name who matched with user
-    who_request = models.TextField(max_length=200, blank=True)#Collect a name who sent a request
+        return self.who_send
+class Match_Class(models.Model):#creat match model
+    myself = models.TextField(max_length=200, blank=True) #Collect a name user
+    another_user = models.TextField(max_length=200, blank=True)#Collect a name who matched with this user
     def __str__(self):
-        return self.who_matched
+        return self.myself
 
-class Userinfo(models.Model):#create user information model
+class UserInfo(models.Model):#create user information model
     name = models.TextField(max_length=200, blank=True)#Collect a username data
     firstname = models.TextField(max_length=200, blank=True)#Collect a first name
     lastname = models.TextField(max_length=200, blank=True)#Collect a last name
@@ -34,8 +34,8 @@ class Userinfo(models.Model):#create user information model
     bio = models.TextField(blank=True)#Collect a gender
     fb_link = models.TextField(null=True)#Collect a facebook link
     good_subject = models.ManyToManyField(Subject, related_name='Userinfos',blank=True)#enable to link this model to subject model
-    request = models.ManyToManyField(request_class,blank=True)#enable to link this model to request model
-    match = models.ManyToManyField(match_class,blank=True)#enable to link this model to match model
+    request = models.ManyToManyField(Request_Class, blank=True)#enable to link this model to request model
+    match = models.ManyToManyField(Match_Class, blank=True)#enable to link this model to match model
     match_request = models.IntegerField(default=0)#Collect amount of notify when you have a request from someone
     massage_list = models.IntegerField(default=0)#Collect amount of notify when you have a massage from someone
 
@@ -53,7 +53,7 @@ class Userinfo(models.Model):#create user information model
         self.save()
 
 class Comment(models.Model):#create comment model
-    post = models.ForeignKey(Userinfo,on_delete=models.CASCADE,related_name='comments',null=True)#link this model to userinfo
+    post = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name='comments', null=True)#link this model to userinfo
     name = models.CharField(max_length=80,null=True)#Collect a name who comment you
     comment = models.CharField(max_length=500,null=True)#Collect a comment massage
     star = models.CharField(max_length=500,null=True)#Collect a score
@@ -77,8 +77,8 @@ class Profile(models.Model):#create a profile model,this model is same Userinfo 
 
     def __str__(self):
         return self.user.username
-class Profile_pic(models.Model):#this model create for Profile picture
-    user = models.OneToOneField(Userinfo, on_delete=models.CASCADE)#Collect a first name
+class Profile_Picture(models.Model):#this model create for Profile picture
+    user = models.OneToOneField(UserInfo, on_delete=models.CASCADE)#Collect a first name
     images = models.ImageField(default='default.png',upload_to='media')#Collect a picture
 
 

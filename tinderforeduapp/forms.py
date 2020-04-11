@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Comment, Userinfo, Profile,Profile_pic
+from .models import Comment, UserInfo, Profile,Profile_Picture
 
 
 class SignUpForm(UserCreationForm): #form sign up
@@ -42,16 +42,16 @@ class AdditionalForm(forms.ModelForm):
     school = forms.CharField(max_length=100)
     #bio = forms.CharField(label="Choose your gender", widget=forms.Select(choices=Gender))
     class Meta:
-        model = Userinfo
+        model = UserInfo
         fields = ('school',)
 class Editprofileform(forms.ModelForm):#edit profile form
 
 
     class Meta:
-        model = Userinfo #link data in form to userintfo model
+        model = UserInfo #link data in form to userintfo model
         fields = ['firstname', 'lastname', 'age', 'school', 'bio', ]
 
 class profilepicture(forms.ModelForm): #profile picture form
     class Meta:
-        model = Profile_pic #link data in form to Profile_pic
+        model = Profile_Picture #link data in form to Profile_pic
         fields = ['images']

@@ -23,11 +23,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='userinfo',
             name='match',
-            field=models.ManyToManyField(blank=True, to='tinderforeduapp.match_class'),
+            field=models.ManyToManyField(blank=True, to='tinderforeduapp.Match_Class'),
         ),
         migrations.AlterField(
             model_name='userinfo',
             name='request',
-            field=models.ManyToManyField(blank=True, to='tinderforeduapp.request_class'),
+            field=models.ManyToManyField(blank=True, to='tinderforeduapp.Request_Class'),
         ),
     ]

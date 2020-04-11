@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='comment',
             name='commentto',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='commentto', to='tinderforeduapp.Userinfo'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='commentto', to='tinderforeduapp.UserInfo'),
         ),
     ]

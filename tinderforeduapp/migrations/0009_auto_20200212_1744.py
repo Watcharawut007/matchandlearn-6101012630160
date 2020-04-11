@@ -21,6 +21,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='userinfo',
             name='request',
-            field=models.ManyToManyField(to='tinderforeduapp.request_class'),
+            field=models.ManyToManyField(to='tinderforeduapp.Request_Class'),
         ),
     ]

@@ -1,4 +1,4 @@
-from .models import Userinfo, Profile_pic
+from .models import UserInfo, Profile_Picture
 from django.contrib.auth.models import User
 from social_core.pipeline.user import get_username as social_get_username
 from datetime import date, datetime
@@ -22,20 +22,20 @@ def user_profile_db(backend, user, response, *args, **kwargs):
         if response.get('gender') == 'female':
             gender = 'Female'
         if response.get('email') == None:
-            user = Userinfo.objects.create(name=(response.get('name')).split(" ")[0] + (response.get('name')).split(" ")[1],
-                                    school='',
-                                    age=age,
-                                    fullname=(response.get('name')).split(" ")[0],
-                                    lastname=(response.get('name')).split(" ")[1],
-                                    bio=gender, fb_link=response.get('link'))
+            user = UserInfo.objects.create(name=(response.get('name')).split(" ")[0] + (response.get('name')).split(" ")[1],
+                                           school='',
+                                           age=age,
+                                           fullname=(response.get('name')).split(" ")[0],
+                                           lastname=(response.get('name')).split(" ")[1],
+                                           bio=gender, fb_link=response.get('link'))
         else:
-            user = Userinfo.objects.create(name=(response.get('email')).split("@")[0],
-                                school='',
-                                age=age,
-                                fullname=(response.get('name')).split(" ")[0],
-                                lastname=(response.get('name')).split(" ")[1],
-                                bio=gender, fb_link=response.get('link'))
-        Profile_pic.objects.create(user=user, images='default.png')
+            user = UserInfo.objects.create(name=(response.get('email')).split("@")[0],
+                                           school='',
+                                           age=age,
+                                           fullname=(response.get('name')).split(" ")[0],
+                                           lastname=(response.get('name')).split(" ")[1],
+                                           bio=gender, fb_link=response.get('link'))
+        Profile_Picture.objects.create(user=user, images='default.png')
 
 def get_username(strategy, details, backend, user=None, *args, **kwargs):
     result = social_get_username(strategy, details, backend, user=user, *args, **kwargs)
