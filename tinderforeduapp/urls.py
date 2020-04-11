@@ -13,8 +13,8 @@ from . import views as core_views
 app_name = 'tinder'
 urlpatterns = [
     path('', views.home_page, name='home'),
-    path('<int:user_id>/your_subject/', views.personal_profile, name ='your_subject'),
-    path('<int:user_id>/select_delete/', views.select_delete, name ='select_delete'),
+    path('<int:user_id>/personal_profile/', views.personal_profile, name ='your_subject'),
+    path('<int:user_id>/select_delete/', views.select_delete_good_subject, name ='select_delete'),
     path('login/', LoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(next_page='/login'), name="logout"),
     url(r'^signup/$', core_views.signup, name='signup'),
@@ -36,6 +36,6 @@ urlpatterns = [
     path('privacypolicy/', TemplateView.as_view(template_name="tinder/privacy.html"), name='privacy'),
     path('faq/', TemplateView.as_view(template_name="tinder/faq.html"), name='faq'),
     path('aboutus/', TemplateView.as_view(template_name="tinder/aboutus.html"), name='aboutus'),
-    path('adddata/', views.adddata, name ='adddata'),
+    path('adddata/', views.check_lost_information, name ='adddata'),
     path('<int:user_id>/edit_profile/', views.edit_profile, name="edit_profile"),
 ]
