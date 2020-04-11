@@ -24,7 +24,7 @@ urlpatterns = [
     path('<int:user_id>/Unmatched/',views.Unmatched,name="unmatched"),
     path('<int:user_id>/match_request/', views.match_request_list, name="match_request"),
     path('<int:user_id>/profile_accept/',views.profile_accept,name="profile_accept"),
-    path('<int:user_id>/students_list/',views.students_list,name="students_list"),
+    path('<int:user_id>/students_list/', views.tutor_student_list, name="students_list"),
     path('<int:user_id>/watch_profile',views.watch_profile,name="watch_profile"),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         views.activate, name='activate'),
