@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='savechat',
-            name='name',
+            name='url_room_name',
             field=models.TextField(blank=True),
         ),
         migrations.AlterField(

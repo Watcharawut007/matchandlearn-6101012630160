@@ -47,12 +47,12 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
                 <li class="nav-item">
-                    <a class="nav-link link text-white display-4" href="{% url 'tinder:students_list' user_infomation.id%}">
+                    <a class="nav-link link text-white display-4" href="{% url 'tinder:tutor_student_list' user_infomation.id%}">
                         Students and Tutor list
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link link text-white display-4" name = "Match request" href="{% url 'tinder:match_request' user_infomation.id %}" {% if user_infomation.match_request > 0 %}class="notification"{% endif %}><span>Student request</span>{% if user_infomation.match_request > 0 %}<span name= "value_notificate" class="badge">{{ user_infomation.match_request }}</span>{% endif %}</a>
+                    <a class="nav-link link text-white display-4" name = "Match request" href="{% url 'tinder:request_list' user_infomation.id %}" {% if user_infomation.match_request > 0 %}class="notification"{% endif %}><span>Student request</span>{% if user_infomation.match_request > 0 %}<span name= "value_notificate" class="badge">{{ user_infomation.match_request }}</span>{% endif %}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link link text-white display-4" href="{% url 'tinder:aboutus' %}">
@@ -72,7 +72,7 @@
             </ul>
             <div class="navbar-buttons mbr-section-btn">
                 <a class="btn btn-sm btn-primary display-4" href="/{{ user_infomation.id }}/personal_profile">
-                    Profile : {{ user.first_name }}
+                    Profile : {{ user_infomation.firstname }}
                 </a>
             </div>
         </div>
@@ -101,7 +101,7 @@
                                     <input type="text" name="school" placeholder="Location" class="form-control px-3 display-7" id="school_id">
                                 </div>
                                 <div class="col-md-12 form-group ">
-                                <select name="bio" class="form-control px-3 display-7">
+                                <select name="gender" class="form-control px-3 display-7">
                                     <option value="" selected="">Select gender</option>
                                     <option value="male">male</option>
                                     <option value="female">female</option>
@@ -140,7 +140,7 @@
                 <div class="item-caption py-3">
                     <div class="item-name px-2">
                         <p class="mbr-fonts-style display-5">
-                            {{ key.fullname }} {{ key.lastname }}</p>
+                            {{ key.firstname }} {{ key.lastname }}</p>
                     </div>
                 </div>
                       </a>

@@ -82,8 +82,8 @@ bg{
 </head>
 <ul>
   <li><a href="/">Home</a></li>
-  <li><a name = "Students and Tutor list" href="{% url 'tinder:students_list' user_information.id%}">Students and Tutor list</a></li>
-    <li ><a name = "Match request" href="{% url 'tinder:match_request' user_information.id %}" {% if user_information.match_request > 0 %}class="notification"{% endif %}><span>Student request</span>{% if user_information.match_request > 0 %}<span name= "value_notificate" class="badge">{{ user_information.match_request }}</span>{% endif %}</a></li>
+  <li><a name = "Students and Tutor list" href="{% url 'tinder:tutor_student_list' user_information.id%}">Students and Tutor list</a></li>
+    <li ><a name = "Match request" href="{% url 'tinder:request_list' user_information.id %}" {% if user_information.match_request > 0 %}class="notification"{% endif %}><span>Student request</span>{% if user_information.match_request > 0 %}<span name= "value_notificate" class="badge">{{ user_information.match_request }}</span>{% endif %}</a></li>
     <li><a name = "About us" href="{% url 'tinder:aboutus' %}">About</a></li>
     <li><a name = "Chat" href="">Chat</a></li>
     <li><a name = "Privacy Policy" href="{% url 'tinder:privacy' %}">Privacy Policy</a></li>
@@ -111,7 +111,7 @@ bg{
             <div class="about-text">
                 <p id="age_id">age: {{ profile.age }}</p>
                 <p id="school_id">school: {{profile.school }}</p>
-                <p id ="bio">gender: {{ profile.bio }}</p>
+                <p id ="gender">gender: {{ profile.gender }}</p>
             </div>
         </div>
     </header>

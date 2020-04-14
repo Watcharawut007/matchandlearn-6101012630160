@@ -7,35 +7,35 @@ from django.dispatch import receiver
 
 class Subject(models.Model): #create subject model
     subject_name = models.TextField(max_length=200, blank=True) #Collect a subject data when user add it
-    subject_keep = models.TextField(max_length=200, blank=True) #Collect a subject_name value in lower case for easily to search
+    keyword_subject = models.TextField(max_length=200, blank=True) #Collect a subject_name value in lower case for easily to search
     def __str__(self):
         return self.subject_name
 
 
-class Request_Class(models.Model):#create request model
-    who_send = models.TextField(max_length=200, blank=True)#Collect a name who sent a request
+class Requestmodel(models.Model):#create request model
+    who_send = models.TextField(max_length=200, blank=True)#Collect a url_room_name who sent a request
     request_message = models.TextField(max_length=600,blank=True)#Collect about me data
-    who_recive = models.TextField(max_length=200, blank=True)#Collect a name who will recive a request
+    who_recive = models.TextField(max_length=200, blank=True)#Collect a url_room_name who will recive a request
     def __str__(self):
         return self.who_send
-class Match_Class(models.Model):#creat match model
-    myself = models.TextField(max_length=200, blank=True) #Collect a name user
-    another_user = models.TextField(max_length=200, blank=True)#Collect a name who matched with this user
+class Matchmodel(models.Model):#creat match model
+    myself = models.TextField(max_length=200, blank=True) #Collect a url_room_name user
+    another_user = models.TextField(max_length=200, blank=True)#Collect a url_room_name who matched with this user
     def __str__(self):
         return self.myself
 
 class UserInfo(models.Model):#create user information model
     name = models.TextField(max_length=200, blank=True)#Collect a username data
-    firstname = models.TextField(max_length=200, blank=True)#Collect a first name
-    lastname = models.TextField(max_length=200, blank=True)#Collect a last name
+    firstname = models.TextField(max_length=200, blank=True)#Collect a first url_room_name
+    lastname = models.TextField(max_length=200, blank=True)#Collect a last url_room_name
     age = models.TextField(max_length=10,blank=True)#Collect a age
-    school = models.TextField(max_length=200,blank=True)#Collect a school name
-    schoolkey = models.TextField(max_length=200,blank=True)#get a value from school variable a convert to upper case for easily to search
-    bio = models.TextField(blank=True)#Collect a gender
+    school = models.TextField(max_length=200,blank=True)#Collect a school url_room_name
+    school_keyword = models.TextField(max_length=200, blank=True)#get a value from school variable a convert to upper case for easily to search
+    gender = models.TextField(blank=True)#Collect a gender
     fb_link = models.TextField(null=True)#Collect a facebook link
-    good_subject = models.ManyToManyField(Subject, related_name='Userinfos',blank=True)#enable to link this model to subject model
-    request = models.ManyToManyField(Request_Class, blank=True)#enable to link this model to request model
-    match = models.ManyToManyField(Match_Class, blank=True)#enable to link this model to match model
+    expertise = models.ManyToManyField(Subject, related_name='Userinfos', blank=True)#enable to link this model to subject model
+    request = models.ManyToManyField(Requestmodel, blank=True)#enable to link this model to request model
+    match = models.ManyToManyField(Matchmodel, blank=True)#enable to link this model to match model
     match_request = models.IntegerField(default=0)#Collect amount of notify when you have a request from someone
     massage_list = models.IntegerField(default=0)#Collect amount of notify when you have a massage from someone
 
@@ -54,7 +54,7 @@ class UserInfo(models.Model):#create user information model
 
 class Comment(models.Model):#create comment model
     post = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name='comments', null=True)#link this model to userinfo
-    name = models.CharField(max_length=80,null=True)#Collect a name who comment you
+    name = models.CharField(max_length=80,null=True)#Collect a url_room_name who comment you
     comment = models.CharField(max_length=500,null=True)#Collect a comment massage
     star = models.CharField(max_length=500,null=True)#Collect a score
     created_on = models.DateTimeField(auto_now_add=True,null=True)
@@ -77,8 +77,8 @@ class Profile(models.Model):#create a profile model,this model is same Userinfo 
 
     def __str__(self):
         return self.user.username
-class Profile_Picture(models.Model):#this model create for Profile picture
-    user = models.OneToOneField(UserInfo, on_delete=models.CASCADE)#Collect a first name
+class Profilepicture(models.Model):#this model create for Profile picture
+    user = models.OneToOneField(UserInfo, on_delete=models.CASCADE)#Collect a first url_room_name
     images = models.ImageField(default='default.png',upload_to='media')#Collect a picture
 
 

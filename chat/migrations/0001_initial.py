@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='Savechat',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField(blank=True, max_length=200)),
+                ('url_room_name', models.TextField(blank=True, max_length=200)),
                 ('chat', models.TextField(blank=True, max_length=200000000000000)),
             ],
         ),

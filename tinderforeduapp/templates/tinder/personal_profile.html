@@ -82,8 +82,8 @@ bg{
 </head>
 <ul>
   <li><a href="/">Home</a></li>
-  <li><a name = "Students and Tutor list" href="{% url 'tinder:students_list' user_infomation.id%}">Students and Tutor list</a></li>
-    <li ><a name = "Match request" href="{% url 'tinder:match_request' user_infomation.id %}" {% if user_infomation.match_request > 0 %}class="notification"{% endif %}><span>Student request</span>{% if user_infomation.match_request > 0 %}<span name= "value_notificate" class="badge">{{ user_infomation.match_request }}</span>{% endif %}</a></li>
+  <li><a name = "Students and Tutor list" href="{% url 'tinder:tutor_student_list' user_infomation.id %}">Students and Tutor list</a></li>
+    <li ><a name = "Match request" href="{% url 'tinder:request_list' user_infomation.id %}" {% if user_infomation.match_request > 0 %}class="notification"{% endif %}><span>Student request</span>{% if user_infomation.match_request > 0 %}<span name= "value_notificate" class="badge">{{ user_infomation.match_request }}</span>{% endif %}</a></li>
     <li><a name = "About us" href="{% url 'tinder:aboutus' %}">About</a></li>
     <li><a name = "Privacy Policy" href="{% url 'tinder:privacy' %}">Privacy Policy</a></li>
     <li style="float:right"><a href="{% url 'tinder:logout' %}">Logout</a></li>
@@ -111,7 +111,7 @@ bg{
             <div class="about-text">
                 <p id="age_id">age: {{ user_infomation.age }}</p>
                 <p id="school_id">school: {{ user_infomation.school }}</p>
-                <p id ="bio">gender: {{ user_infomation.bio }}</p>
+                <p id ="bio">gender: {{ user_infomation.gender }}</p>
             </div>
             <form action="{% url 'tinder:edit_profile' user_infomation.id %}">
             <input class="btn btn-primary" type="submit" value="Edit profile" />
@@ -139,7 +139,7 @@ bg{
             <div class="col-md-6">
                 <div class="expertise-item">
                     <table id="good_subject_table">
-    <form action="{% url 'tinder:select_delete' user_infomation.id %}" method="post">
+    <form action="{% url 'tinder:select_delete_expertise_subject' user_infomation.id %}" method="post">
     {% for subject_name in subject.all %}
         <tr><td><input type="checkbox" name="subject_list" id="subject_name:{{ forloop.counter }}" value="{{ subject_name.id }}"><label for="subject_name{{ forloop.counter }}">{{ forloop.counter }}: {{ subject_name }}</label></td></tr><p></p>
     {% endfor %}

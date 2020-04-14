@@ -161,9 +161,9 @@ class signUp(unittest.TestCase):
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('Enter your good subject', header_text)
 
-        # he notices his name
+        # he notices his url_room_name
         name_text = self.browser.find_element_by_tag_name('h2').text
-        self.assertIn('name :pakkapure', name_text)
+        self.assertIn('url_room_name :pakkapure', name_text)
 
         # he notices his age
         age_text = self.browser.find_element_by_id('age_id').text

@@ -154,10 +154,10 @@ SOCIAL_AUTH_FACEBOOK_KEY = os.environ['FACEBOOK_KEY']
 SOCIAL_AUTH_FACEBOOK_SECRET = os.environ['FACEBOOK_SECRET']
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_link', 'user_gender', 'user_birthday']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-  'fields': 'id, name, email, picture.type(large), gender, birthday, link'
+  'fields': 'id, url_room_name, email, picture.type(large), gender, birthday, link'
 }
 SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [
-    ('name', 'name'),
+    ('url_room_name', 'url_room_name'),
     ('email', 'email'),
     ('picture', 'picture'),
     ('link', 'profile_url'),

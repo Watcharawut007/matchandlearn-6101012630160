@@ -160,7 +160,7 @@
         this.readyState = WebSocket.CONNECTING;
 
         /**
-         * A string indicating the name of the sub-protocol the server selected; this will be one of
+         * A string indicating the url_room_name of the sub-protocol the server selected; this will be one of
          * the strings specified in the protocols parameter when creating the WebSocket object.
          * Read only.
          */
@@ -196,7 +196,7 @@
          * Object doesn't support this action
          *
          * http://stackoverflow.com/questions/19345392/why-arent-my-parameters-getting-passed-through-to-a-dispatched-event/19345563#19345563
-         * @param s String The name that the event should use
+         * @param s String The url_room_name that the event should use
          * @param args Object an optional object that the event will use
          */
         function generateEvent(s, args) {
