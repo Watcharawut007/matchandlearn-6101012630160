@@ -54,7 +54,7 @@ class UserInfo(models.Model):#create user information model
 
 class Comment(models.Model):#create comment model
     post = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name='comments', null=True)#link this model to userinfo
-    name = models.CharField(max_length=80,null=True)#Collect a url_room_name who comment you
+    name = models.CharField(max_length=80,null=True)#Collect  who comment you
     comment = models.CharField(max_length=500,null=True)#Collect a comment massage
     star = models.CharField(max_length=500,null=True)#Collect a score
     created_on = models.DateTimeField(auto_now_add=True,null=True)
@@ -80,6 +80,24 @@ class Profile(models.Model):#create a profile model,this model is same Userinfo 
 class Profilepicture(models.Model):#this model create for Profile picture
     user = models.OneToOneField(UserInfo, on_delete=models.CASCADE)#Collect a first url_room_name
     images = models.ImageField(default='default.png',upload_to='media')#Collect a picture
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @receiver(post_save, sender=User)

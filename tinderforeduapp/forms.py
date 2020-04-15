@@ -51,7 +51,7 @@ class Editprofileform(forms.ModelForm):#edit profile form
         model = UserInfo #link data in form to userintfo model
         fields = ['firstname', 'lastname', 'age', 'school', 'gender', ]
 
-class profilepicture(forms.ModelForm): #profile picture form
+class profilepicture(forms.ModelForm): #change profile picture form
     class Meta:
         model = Profilepicture #link data in form to Profilepicture
         fields = ['images']

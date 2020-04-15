@@ -11,7 +11,7 @@ from django.views.generic import TemplateView
 from . import views as core_views
 
 app_name = 'tinder'
-urlpatterns = [
+urlpatterns = [  #link between function and url when user connect to url function will run,name used in templates
     path('', views.home_page, name='home'),
     path('<int:user_id>/personal_profile/', views.personal_profile, name ='personal_profile'),
     path('<int:user_id>/select_delete/', views.select_delete_expertise_subject, name ='select_delete_expertise_subject'),
