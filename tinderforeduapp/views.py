@@ -37,7 +37,7 @@ def signup(request):#this function is used when user signup
             user.profile.age = form.cleaned_data.get('age')
             user.profile.gender = form.cleaned_data.get('gender')
             #create a model for collect a information user
-            newuser = UserInfo.objects.create(name=user.username,
+            new_user = UserInfo.objects.create(name=user.username,
                                               school=user.profile.college,
                                               school_keyword=change_school_to_keyword(user.profile.college),
                                               age=user.profile.age,
@@ -45,9 +45,9 @@ def signup(request):#this function is used when user signup
                                               lastname=user.profile.last_name,
                                               gender =user.profile.gender)
             #Add profile picture in model with default.png
-            Profilepicture.objects.create(user=newuser, images='default.png')
+            Profilepicture.objects.create(user=new_user, images='default.png')
             #save model
-            newuser.save()
+            new_user.save()
             user.save()
             #send email for confirm signup
             current_site = get_current_site(request)
@@ -91,9 +91,9 @@ def personal_profile(request, user_id):#this function is used to watch personal 
     if request.POST.get('subject_good'):#get request when user add good subject
         subject = Subject.objects.create(subject_name=request.POST['subject_good'],
                                          keyword_subject=change_subject_to_keyword(request.POST['subject_good']))#create object subject
-        U1=UserInfo.objects.get(name=request.user.username)
-        U1.expertise.add(subject)#add good subject to user model
-        U1.save()
+        User=UserInfo.objects.get(name=request.user.username)
+        User.expertise.add(subject)#add good subject to user model
+        User.save()
         #render a personal_profile.html templates
         return render(request,
                       'tinder/personal_profile.html',
@@ -113,7 +113,7 @@ def successlogin(request):#this function is used to go to home templates when us
                       'tinder/home.html',
                       {'user_infomation': request.user.username })#render home templates
 def another_profile(request,user_id):#this function is used to watch another user profile
-    pic = Profilepicture.objects.get(user=user_id)#get profile picture
+    picture = Profilepicture.objects.get(user=user_id)#get profile picture
     comments = Comment.objects.filter(post=request.user.id)#get comment
     modelget = get_object_or_404(UserInfo, id=user_id)#get model user if  this model cant get return 404
     Username = UserInfo.objects.get(name=request.user.username)#get model user
@@ -125,7 +125,7 @@ def another_profile(request,user_id):#this function is used to watch another use
 
     if another_people.request.filter(who_send=Username.name).exists():#check if this user matched with him can open chat room
         return render(request, 'tinder/profile.html', {'comments': comments,
-                                                       'pic':pic,
+                                                       'pic':picture,
                                                        'user_infomation': UserInfo.objects.get(name=request.user.username),
                                                        'subject': UserInfo.objects.get(id=user_id).expertise.all(),
                                                        'profile': UserInfo.objects.get(id=user_id),
@@ -133,7 +133,7 @@ def another_profile(request,user_id):#this function is used to watch another use
                                                        "chat_room_name":Url_chat})#render profile templates,check variable is used to check if this user matched with him he can chat
     return render(request,'tinder/profile.html',
                   {'comments': comments,
-                   'pic':pic,
+                   'pic':picture,
                    'profile': modelget,
                    'subject':modelget.expertise.all(),
                    'user_infomation': UserInfo.objects.get(name =request.user.username),
@@ -227,7 +227,7 @@ def request_list(request, user_id):#show all users that what to match with this 
 def send_request(request, user_id):#this function is used when user want to send request to another user
     #load all user data and another users data
     Username = UserInfo.objects.get(name=request.user.username)
-    pic = Profilepicture.objects.get(user=user_id)
+    picture = Profilepicture.objects.get(user=user_id)
     comments = Comment.objects.filter(post=request.user.id)
     another_people = UserInfo.objects.get(id=user_id)
     #just create chat url link if he already match
@@ -239,7 +239,7 @@ def send_request(request, user_id):#this function is used when user want to send
         if another_people.request.filter(who_send=Username.name,who_recive=another_people.name) or Username.request.filter(who_send=another_people.name,who_recive=Username.name) :#check if this user matched
             already_match=1
             return render(request, 'tinder/profile.html',
-                          {'already_match': already_match, 'comments': comments, 'pic': pic,
+                          {'already_match': already_match, 'comments': comments, 'pic': picture,
                            'user_infomation': UserInfo.objects.get(name=request.user.username),
                            'subject': UserInfo.objects.get(id=user_id).expertise.all(),
                            'profile': UserInfo.objects.get(id=user_id),
@@ -255,7 +255,7 @@ def send_request(request, user_id):#this function is used when user want to send
                           'tinder/profile.html',
                           {'already_match':already_match,
                            'comments': comments,
-                           'pic': pic,
+                           'pic': picture,
                            'user_infomation': UserInfo.objects.get(name=request.user.username),
                            'subject': UserInfo.objects.get(id=user_id).expertise.all(),
                            'check': 1,  # this user already send request to him/her
@@ -264,7 +264,7 @@ def send_request(request, user_id):#this function is used when user want to send
 def unsend_request(request, user_id): #this function is used when user want to unmatched to another user
     # load all user data and another users data
     Username = UserInfo.objects.get(name=request.user.username)
-    pic = Profilepicture.objects.get(user=user_id)
+    picture = Profilepicture.objects.get(user=user_id)
     comments = Comment.objects.filter(post=request.user.id)
     another_people = UserInfo.objects.get(id=user_id)
     # just create chat url link if he already matched
@@ -284,7 +284,7 @@ def unsend_request(request, user_id): #this function is used when user want to u
                                                        'profile': UserInfo.objects.get(id=user_id),
                                                        'chat_room_name':Url_chat})#render profile template
     return render(request, 'tinder/profile.html', {'comments': comments,
-                                                   'pic': pic,
+                                                   'pic': picture,
                                                    'user_infomation': UserInfo.objects.get(name=request.user.username),
                                                    'subject': UserInfo.objects.get(id=user_id).expertise.all(),
                                                     'profile': UserInfo.objects.get(id=user_id),
@@ -292,7 +292,7 @@ def unsend_request(request, user_id): #this function is used when user want to u
 def accept_or_decline_request(request, user_id):#this function is used when you are accept or decline to people that request to you
     #contain user and another user data
     Username = UserInfo.objects.get(name=request.user.username)
-    pic = Profilepicture.objects.get(user=user_id)
+    picture = Profilepicture.objects.get(user=user_id)
     another_people = UserInfo.objects.get(id=user_id)
     #url chat
     Url_list = [Username.name, another_people.name]
@@ -313,7 +313,7 @@ def accept_or_decline_request(request, user_id):#this function is used when you 
         return HttpResponseRedirect(reverse('tinder:request_list', args=(Username.id,)))#redirect match_request template
     return render(request,
                   'tinder/profile_accept_or_decline.html',
-                  {'comments':comments, 'pic':pic,
+                  {'comments':comments, 'pic':picture,
                    'user_infomation': UserInfo.objects.get(name=request.user.username),
                    'chat_room_name':chat_room_name,
                    'profile': UserInfo.objects.get(id=user_id),
@@ -338,7 +338,7 @@ def watch_profile(request,user_id):#this function is used when user watch anothe
     #contain user that he want to see
     another_people = UserInfo.objects.get(id=user_id)
     post = get_object_or_404(UserInfo, name=another_people.name)
-    pic = Profilepicture.objects.get(user=user_id)
+    picture = Profilepicture.objects.get(user=user_id)
     comments = post.comments.filter(active=True)
     new_comment = None #set default if this user do not comment yet
     if request.method == 'POST':#if user comment
@@ -364,7 +364,7 @@ def watch_profile(request,user_id):#this function is used when user watch anothe
         another_people.match.remove(unmatch_obj2)
         return HttpResponseRedirect(reverse('tinder:tutor_student_list', args=(Username.id,)))#redirect to tutor_student_list
     return render(request,'tinder/watch_profile.html',
-                  {'pic':pic,
+                  {'pic':picture,
                    'user_information':UserInfo.objects.get(name=request.user.username),
                    'profile':UserInfo.objects.get(id=user_id),
                    'post': post, 'comments': comments,
@@ -373,10 +373,10 @@ def watch_profile(request,user_id):#this function is used when user watch anothe
 
 def edit_profile(request,user_id):#this function is used when user edit his/her profile
     User = UserInfo.objects.get(name=request.user.username)#get user data
-    Pic = Profilepicture.objects.get(user= User)#get user Profile picture
+    picture = Profilepicture.objects.get(user= User)#get user Profile picture
     if request.method == "POST":#if user submit edit profile
         form = Editprofileform(request.POST,instance=User)#form infomation user
-        formpic = profilepicture(request.POST,request.FILES,instance=Pic)#form user Profile picture
+        formpic = profilepicture(request.POST,request.FILES,instance=picture)#form user Profile picture
         if form.is_valid() and formpic.is_valid():#check form is valid
             form.save()#save data
             formpic.save()#save data
@@ -384,8 +384,8 @@ def edit_profile(request,user_id):#this function is used when user edit his/her 
 
     else: #user do not submit to edit profile
         form = Editprofileform(instance=User)
-        formpic = profilepicture(instance=Pic)
-    return render(request,'tinder/edit_profile.html',{"pic":Pic,'form':form,'formpic':formpic})
+        formpic = profilepicture(instance=picture)
+    return render(request,'tinder/edit_profile.html',{"pic":picture,'form':form,'formpic':formpic})
 #convert string function to easily search
 def change_subject_to_keyword(keyword):
     keyword = keyword.lower()
