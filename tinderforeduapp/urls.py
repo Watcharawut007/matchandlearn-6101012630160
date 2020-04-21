@@ -36,6 +36,6 @@ urlpatterns = [  #link between function and url when user connect to url functio
     path('privacypolicy/', TemplateView.as_view(template_name="tinder/privacy.html"), name='privacy'),
     path('faq/', TemplateView.as_view(template_name="tinder/faq.html"), name='faq'),
     path('aboutus/', TemplateView.as_view(template_name="tinder/aboutus.html"), name='aboutus'),
-    path('adddata/', views.check_lost_information, name ='adddata'),
+    path('adddata/', views.add_school_data, name ='adddata'),
     path('<int:user_id>/edit_profile/', views.edit_profile, name="edit_profile"),
 ]

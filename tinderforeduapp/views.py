@@ -18,14 +18,14 @@ from django.db import close_old_connections
 # Create your views here.
 
 @login_required
-def home(request):#this function used when user get in home pahe
+def home(request):#this function is used when user get in home pahe
     return render(request, 'tinder/home.html')
 
-def signup(request):#this function used when user signup
+def signup(request):#this function is used when user signup
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():#check this form is valid
-            user = form.save(commit=False)#get form  and setting
+            user = form.save(commit=False)#get form and setting we did not commit yet because user must confirm the registration in email
             user.is_active = False
             user.save()
             user.refresh_from_db()#refresh db for get new model
@@ -39,7 +39,7 @@ def signup(request):#this function used when user signup
             #create a model for collect a information user
             newuser = UserInfo.objects.create(name=user.username,
                                               school=user.profile.college,
-                                              school_keyword=keywordschoolconvert(user.profile.college),
+                                              school_keyword=change_school_to_keyword(user.profile.college),
                                               age=user.profile.age,
                                               firstname=user.profile.first_name,
                                               lastname=user.profile.last_name,
@@ -49,7 +49,7 @@ def signup(request):#this function used when user signup
             #save model
             newuser.save()
             user.save()
-            #send email for comfirm signup
+            #send email for confirm signup
             current_site = get_current_site(request)
             mail_subject = 'Please verify your email address.'
             message = render_to_string('tinder/acc_active_email.html', {
@@ -68,7 +68,7 @@ def signup(request):#this function used when user signup
         form = SignUpForm()
     return render(request, 'tinder/signup.html', {'form': form})#render Signup form
 
-def account_activate(request, uidb64, token, backend='django.contrib.auth.backends.ModelBackend'): #this function used for comfirm your signup in email
+def account_activate(request, uidb64, token, backend='django.contrib.auth.backends.ModelBackend'): #this function is used for confirm your signup in email
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -90,7 +90,7 @@ def personal_profile(request, user_id):#this function is used to watch personal 
     profile_picture = Profilepicture.objects.get(user=User)#get a profile picture
     if request.POST.get('subject_good'):#get request when user add good subject
         subject = Subject.objects.create(subject_name=request.POST['subject_good'],
-                                         keyword_subject=keywordsubjectconvert(request.POST['subject_good']))#create object subject
+                                         keyword_subject=change_subject_to_keyword(request.POST['subject_good']))#create object subject
         U1=UserInfo.objects.get(name=request.user.username)
         U1.expertise.add(subject)#add good subject to user model
         U1.save()
@@ -140,15 +140,15 @@ def another_profile(request,user_id):#this function is used to watch another use
                    "chat_room_name":Url_chat})
 
 
-def check_lost_information(request):#check if user did not give any information when user signup with facebook
+def add_school_data(request):#check if users signup with facebook then they do not have school data
     if request.method == "POST":
         form = AdditionalForm(request.POST)
         if form.is_valid():#check form is valid so add school name in userinformation model
             school = form.cleaned_data.get('school')
-            adddata = UserInfo.objects.get(name=request.user.username)
-            adddata.school = school
-            adddata.school_keyword = keywordschoolconvert(school)
-            adddata.save()
+            facebook_user = UserInfo.objects.get(name=request.user.username)
+            facebook_user.school = school
+            facebook_user.school_keyword = change_school_to_keyword(school)
+            facebook_user.save()
             return HttpResponseRedirect('/')
     else:
         form = AdditionalForm()
@@ -162,27 +162,27 @@ def home_page(request):#this function contain all fucntion in home template
         return HttpResponseRedirect('/login')
     if UserInfo.objects.get(name=request.user.username).school == '':
         return HttpResponseRedirect('/adddata')
-    if request.POST.get('tutor_find'):#check user find a tutor
+    if request.POST.get('tutor_find'):#check user is find a tutor
         sendPOST = 1
-        what_sub = keywordsubjectconvert(request.POST['tutor_find'])#convert string to easily to find
-        #user use a filter to search a tutor
+        what_sub = change_subject_to_keyword(request.POST['tutor_find'])#convert string to easily search
+        #user is use a filter to search a tutor
         result_search = {}
-        if request.POST['gender'] != "" and request.POST['school'] !=" ":#user use filter only subject filter
+        if request.POST['gender'] != "" and request.POST['school'] !=" ":#user is use filter only subject filter
             search_tutor = UserInfo.objects.filter(expertise__keyword_subject=what_sub,
-                                                 school_keyword=keywordschoolconvert(request.POST['school']),
-                                                 gender=request.POST['gender'])#use method filter to find a tutor
+                                                   school_keyword=change_school_to_keyword(request.POST['school']),
+                                                   gender=request.POST['gender'])#use method filter to find a tutor
             for key in search_tutor:
                 result_search[key] = Profilepicture.objects.get(user=key)#get a information that user can find
-        elif request.POST['gender'] != "":#user use gender filter
+        elif request.POST['gender'] != "":#user is using gender filter
             search_tutor = UserInfo.objects.filter(expertise__keyword_subject=what_sub, gender=request.POST['gender'])
             for key in search_tutor:
                 result_search[key] = Profilepicture.objects.get(user=key)
-        elif request.POST['school'] != "":#user use  school filter
+        elif request.POST['school'] != "":#user is using school filter
             search_tutor = UserInfo.objects.filter(expertise__keyword_subject=what_sub,
-                                                 school_keyword=keywordschoolconvert(request.POST['school']))
+                                                   school_keyword=change_school_to_keyword(request.POST['school']))
             for key in search_tutor:
                 result_search[key] = Profilepicture.objects.get(user=key)
-        else:#user use school filter and gender filter
+        else:#user is using school filter and gender filter
             search_tutor = UserInfo.objects.filter(expertise__keyword_subject=what_sub)
             for key in search_tutor:
                 result_search[key] = Profilepicture.objects.get(user=key)
@@ -200,8 +200,8 @@ def home_page(request):#this function contain all fucntion in home template
                     "search_size": len(search_tutor),
                     'sendPOST':sendPOST,
                     'all_request':UserInfo.objects.get(name=request.user.username).request.all()})#render home template
-def select_delete_expertise_subject(request, user_id):#this function used when user remove good subject
-    User1 = UserInfo.objects.get(id=user_id)#get information user
+def select_delete_expertise_subject(request, user_id):#this function is used when user remove good subject
+    User = UserInfo.objects.get(id=user_id)#get information user
     modelget = get_object_or_404(UserInfo, id=user_id)#get information user
     select_subject = request.POST.getlist("subject_list")#get all subject that user want to delete
     #delete it all
@@ -212,10 +212,10 @@ def select_delete_expertise_subject(request, user_id):#this function used when u
             select = modelget.expertise.get(pk=i)
             select.delete()
 
-    return HttpResponseRedirect(reverse('tinder:personal_profile', args=(User1.id,)))#redirect to personal_profile.html template
+    return HttpResponseRedirect(reverse('tinder:personal_profile', args=(User.id,)))#redirect to personal_profile.html template
 def request_list(request, user_id):#show all users that what to match with this user
     match_list_id  = UserInfo.objects.get(name=request.user.username).request.all()#get all users
-    list_match = []#Collect all users for create a link to watch profile
+    list_match = []#Collect all users for create a link to watch their profile
     UserInfo.objects.get(name=request.user.username).read()  # when user get in this page notify should be 0
     for i in match_list_id:
         list_match.append(UserInfo.objects.get(name=i.who_send))#get all users information
@@ -224,7 +224,7 @@ def request_list(request, user_id):#show all users that what to match with this 
                   {'user_infomation':UserInfo.objects.get(name=request.user.username),
                    'match_request':UserInfo.objects.get(name=request.user.username).request.all(),
                    'list_match':list_match})#render match request template
-def send_request(request, user_id):#this function used when user want to send request to another user
+def send_request(request, user_id):#this function is used when user want to send request to another user
     #load all user data and another users data
     Username = UserInfo.objects.get(name=request.user.username)
     pic = Profilepicture.objects.get(user=user_id)
@@ -234,7 +234,7 @@ def send_request(request, user_id):#this function used when user want to send re
     Url_list = [Username.name, another_people.name]
     Url_list_sort = sorted(Url_list)
     Url_chat = Url_list_sort[0] + "_"+Url_list_sort[1]
-    already_match = 0 #use to check if he did not match this variable = 0
+    already_match = 0 #use to check if he do not match this variable = 0
     if request.method == "POST":
         if another_people.request.filter(who_send=Username.name,who_recive=another_people.name) or Username.request.filter(who_send=another_people.name,who_recive=Username.name) :#check if this user matched
             already_match=1
@@ -258,16 +258,16 @@ def send_request(request, user_id):#this function used when user want to send re
                            'pic': pic,
                            'user_infomation': UserInfo.objects.get(name=request.user.username),
                            'subject': UserInfo.objects.get(id=user_id).expertise.all(),
-                           'check': 1,  # this user already request
+                           'check': 1,  # this user already send request to him/her
                            'profile':UserInfo.objects.get(id=user_id),
                            'chat_room_name':Url_chat})#render profile template
-def unsend_request(request, user_id): #this function used when user want to unmatched to another user
+def unsend_request(request, user_id): #this function is used when user want to unmatched to another user
     # load all user data and another users data
     Username = UserInfo.objects.get(name=request.user.username)
     pic = Profilepicture.objects.get(user=user_id)
     comments = Comment.objects.filter(post=request.user.id)
     another_people = UserInfo.objects.get(id=user_id)
-    # just create chat url link if he already match
+    # just create chat url link if he already matched
     Url_list = [Username.name, another_people.name]
     Url_list_sort = sorted(Url_list)
     Url_chat = Url_list_sort[0] + "_"+Url_list_sort[1]
@@ -275,7 +275,7 @@ def unsend_request(request, user_id): #this function used when user want to unma
         # load all user data and another users data
         Username = UserInfo.objects.get(name=request.user.username)
         another_people = UserInfo.objects.get(id=user_id)
-        remove_match = another_people.request.get(who_send=Username.name,who_recive=another_people.name)#get request model that used send to
+        remove_match = another_people.request.get(who_send=Username.name,who_recive=another_people.name)#get request model that is used send to
         another_people.request.remove(remove_match)#remove request model
         UserInfo.objects.get(id=user_id).denotify()#remove notify
         UserInfo.objects.get(id=user_id).save()#save db
@@ -289,7 +289,7 @@ def unsend_request(request, user_id): #this function used when user want to unma
                                                    'subject': UserInfo.objects.get(id=user_id).expertise.all(),
                                                     'profile': UserInfo.objects.get(id=user_id),
                                                    'chat_room_name':Url_chat})#render profile template
-def accept_or_decline_request(request, user_id):#this function used when you are accept or decline to people that request to you
+def accept_or_decline_request(request, user_id):#this function is used when you are accept or decline to people that request to you
     #contain user and another user data
     Username = UserInfo.objects.get(name=request.user.username)
     pic = Profilepicture.objects.get(user=user_id)
@@ -319,7 +319,7 @@ def accept_or_decline_request(request, user_id):#this function used when you are
                    'profile': UserInfo.objects.get(id=user_id),
                    'subject': UserInfo.objects.get(id=user_id).expertise.all(),
                    'request': Username.request.get(who_send=another_people.name)})#render template
-def tutor_student_list(request, user_id):#this function used to display tutor or student list
+def tutor_student_list(request, user_id):#this function is used to display tutor or student list
     match_list_id = UserInfo.objects.get(name=request.user.username).match.all()#get all people that match with user
     list_match = {}#keep in dict to display
 
@@ -334,7 +334,7 @@ def tutor_student_list(request, user_id):#this function used to display tutor or
                   {"user_infomation":UserInfo.objects.get(name=request.user.username),
                    'tutor_list':UserInfo.objects.get(id=user_id).request.all(),
                    'list_match':list_match})#render tutor student template
-def watch_profile(request,user_id):#this function used when user watch another profile
+def watch_profile(request,user_id):#this function is used when user watch another profile
     #contain user that he want to see
     another_people = UserInfo.objects.get(id=user_id)
     post = get_object_or_404(UserInfo, name=another_people.name)
@@ -371,7 +371,7 @@ def watch_profile(request,user_id):#this function used when user watch another p
                    'new_comment': new_comment,
                    'comment_form': comment_form})#render watch proflie template
 
-def edit_profile(request,user_id):#this function used when user edit his/her profile
+def edit_profile(request,user_id):#this function is used when user edit his/her profile
     User = UserInfo.objects.get(name=request.user.username)#get user data
     Pic = Profilepicture.objects.get(user= User)#get user Profile picture
     if request.method == "POST":#if user submit edit profile
@@ -386,12 +386,12 @@ def edit_profile(request,user_id):#this function used when user edit his/her pro
         form = Editprofileform(instance=User)
         formpic = profilepicture(instance=Pic)
     return render(request,'tinder/edit_profile.html',{"pic":Pic,'form':form,'formpic':formpic})
-#convert string function to easily to search
-def keywordsubjectconvert(keyword):
+#convert string function to easily search
+def change_subject_to_keyword(keyword):
     keyword = keyword.lower()
     keyword = keyword.replace(' ', '')
     return keyword
-def keywordschoolconvert(keyword):
+def change_school_to_keyword(keyword):
     keyword = keyword.upper()
     keyword = keyword.replace(' ','')
     return keyword

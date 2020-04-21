@@ -37,7 +37,7 @@ class UserInfo(models.Model):#create user information model
     request = models.ManyToManyField(Requestmodel, blank=True)#enable to link this model to request model
     match = models.ManyToManyField(Matchmodel, blank=True)#enable to link this model to match model
     match_request = models.IntegerField(default=0)#Collect amount of notify when you have a request from someone
-    massage_list = models.IntegerField(default=0)#Collect amount of notify when you have a massage from someone
+    message_list = models.IntegerField(default=0)#Collect amount of notify when you have a message from someone
 
     def __str__(self):
         return self.name
@@ -55,7 +55,7 @@ class UserInfo(models.Model):#create user information model
 class Comment(models.Model):#create comment model
     post = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name='comments', null=True)#link this model to userinfo
     name = models.CharField(max_length=80,null=True)#Collect  who comment you
-    comment = models.CharField(max_length=500,null=True)#Collect a comment massage
+    comment = models.CharField(max_length=500,null=True)#Collect a comment message
     star = models.CharField(max_length=500,null=True)#Collect a score
     created_on = models.DateTimeField(auto_now_add=True,null=True)
     active = models.BooleanField(default=True,null=True)
