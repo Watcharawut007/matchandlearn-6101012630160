@@ -52,10 +52,10 @@ class UserInfo(models.Model):#create user information model
     def denotify(self):#when someone cancel request amount of notify should be decrease
         self.match_request = self.match_request - 1
         self.save()
-    def check_birthday(self):#check birthday if today is the user birthday update age user
-        if ((datetime.now().year-self.birthday.year)-int(self.age))==1:
-            if (self.birthday.day <= datetime.now().day and self.birthday.month <= datetime.now().month):
-                self.age =  str(datetime.now().year-self.birthday.year)
+    def check_birthday(self,now):#check birthday if today is the user birthday then update age
+        if ((now.year-self.birthday.year)-int(self.age))!=0:#check when user do not login for long time
+            if (self.birthday.day <= now.day and self.birthday.month <= now.month) or self.birthday.month < now.month:#check when user age should be increase
+                self.age =  str(now.year-self.birthday.year)
                 self.save()
 
 class Comment(models.Model):#create comment model

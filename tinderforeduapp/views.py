@@ -16,7 +16,7 @@ from django.http import HttpResponse
 from django import db
 from django.db import close_old_connections
 # Create your views here.
-
+now = datetime.now()
 @login_required
 def home(request):#this function is used when user get in home pahe
     return render(request, 'tinder/home.html')
@@ -90,7 +90,7 @@ def personal_profile(request, user_id):#this function is used to watch personal 
     User = UserInfo.objects.get(name=request.user.username)#get a data user to display on browser
     comments = Comment.objects.filter(post=request.user.id)#get comment that another user commend
     profile_picture = Profilepicture.objects.get(user=User)#get a profile picture
-    User.check_birthday()
+    User.check_birthday(now)#check birthday user
     if request.POST.get('subject_good'):#get request when user add good subject
         subject = Subject.objects.create(subject_name=request.POST['subject_good'],
                                          keyword_subject=change_subject_to_keyword(request.POST['subject_good']))#create object subject
@@ -121,7 +121,7 @@ def another_profile(request,user_id):#this function is used to watch another use
     modelget = get_object_or_404(UserInfo, id=user_id)#get model user if  this model cant get return 404
     Username = UserInfo.objects.get(name=request.user.username)#get model user
     another_people = UserInfo.objects.get(id=user_id)#get model user that he want to see
-    another_people.check_birthday()#update age this user
+    another_people.check_birthday(now)#check birthday user
     #create chat room url
     Url_list = [Username.name,another_people.name]
     Url_list_sort=sorted(Url_list)
@@ -168,7 +168,7 @@ def home_page(request):#this function contain all fucntion in home template
     if UserInfo.objects.get(name=request.user.username).school == '':
         return HttpResponseRedirect('/adddata')
     User = UserInfo.objects.get(name=request.user.username)
-    User.check_birthday()
+    User.check_birthday(now)#check birthday user
     if request.POST.get('tutor_find'):#check user is find a tutor
         sendPOST = 1
         what_sub = change_subject_to_keyword(request.POST['tutor_find'])#convert string to easily search
@@ -344,7 +344,7 @@ def tutor_student_list(request, user_id):#this function is used to display tutor
 def watch_profile(request,user_id):#this function is used when user watch another profile
     #contain user that he want to see
     another_people = UserInfo.objects.get(id=user_id)
-    another_people.check_birthday()
+    another_people.check_birthday(now)#check birthday user
     post = get_object_or_404(UserInfo, name=another_people.name)
     picture = Profilepicture.objects.get(user=user_id)
     comments = post.comments.filter(active=True)
