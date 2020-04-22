@@ -36,6 +36,7 @@ def signup(request):#this function is used when user signup
             user.profile.college = form.cleaned_data.get('college')
             user.profile.age = form.cleaned_data.get('age')
             user.profile.gender = form.cleaned_data.get('gender')
+            user.profile.birthday = form.cleaned_data.get('birthday')
             #create a model for collect a information user
             new_user = UserInfo.objects.create(name=user.username,
                                               school=user.profile.college,
@@ -43,7 +44,8 @@ def signup(request):#this function is used when user signup
                                               age=user.profile.age,
                                               firstname=user.profile.first_name,
                                               lastname=user.profile.last_name,
-                                              gender =user.profile.gender)
+                                              gender =user.profile.gender,
+                                              birthday=user.profile.birthday)
             #Add profile picture in model with default.png
             Profilepicture.objects.create(user=new_user, images='default.png')
             #save model
@@ -88,6 +90,7 @@ def personal_profile(request, user_id):#this function is used to watch personal 
     User = UserInfo.objects.get(name=request.user.username)#get a data user to display on browser
     comments = Comment.objects.filter(post=request.user.id)#get comment that another user commend
     profile_picture = Profilepicture.objects.get(user=User)#get a profile picture
+    User.check_birthday()
     if request.POST.get('subject_good'):#get request when user add good subject
         subject = Subject.objects.create(subject_name=request.POST['subject_good'],
                                          keyword_subject=change_subject_to_keyword(request.POST['subject_good']))#create object subject
@@ -118,6 +121,7 @@ def another_profile(request,user_id):#this function is used to watch another use
     modelget = get_object_or_404(UserInfo, id=user_id)#get model user if  this model cant get return 404
     Username = UserInfo.objects.get(name=request.user.username)#get model user
     another_people = UserInfo.objects.get(id=user_id)#get model user that he want to see
+    another_people.check_birthday()#update age this user
     #create chat room url
     Url_list = [Username.name,another_people.name]
     Url_list_sort=sorted(Url_list)
@@ -158,10 +162,13 @@ def home_page(request):#this function contain all fucntion in home template
     """search here"""
     search_tutor = [] #this variable used to collect all tutor that user can find
     sendPOST = 0 # check if
+
     if (UserInfo.objects.filter(name=request.user.username).count() == 0):#check if user do not login
         return HttpResponseRedirect('/login')
     if UserInfo.objects.get(name=request.user.username).school == '':
         return HttpResponseRedirect('/adddata')
+    User = UserInfo.objects.get(name=request.user.username)
+    User.check_birthday()
     if request.POST.get('tutor_find'):#check user is find a tutor
         sendPOST = 1
         what_sub = change_subject_to_keyword(request.POST['tutor_find'])#convert string to easily search
@@ -337,6 +344,7 @@ def tutor_student_list(request, user_id):#this function is used to display tutor
 def watch_profile(request,user_id):#this function is used when user watch another profile
     #contain user that he want to see
     another_people = UserInfo.objects.get(id=user_id)
+    another_people.check_birthday()
     post = get_object_or_404(UserInfo, name=another_people.name)
     picture = Profilepicture.objects.get(user=user_id)
     comments = post.comments.filter(active=True)

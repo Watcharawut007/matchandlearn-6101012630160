@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from datetime import datetime
 # Create your models here.
 
 
@@ -38,7 +39,7 @@ class UserInfo(models.Model):#create user information model
     match = models.ManyToManyField(Matchmodel, blank=True)#enable to link this model to match model
     match_request = models.IntegerField(default=0)#Collect amount of notify when you have a request from someone
     message_list = models.IntegerField(default=0)#Collect amount of notify when you have a message from someone
-
+    birthday = models.DateTimeField(blank=True)#Collect birthday
     def __str__(self):
         return self.name
     def read(self):#its mean when you go to request list then amount of notify will be zero
@@ -51,6 +52,11 @@ class UserInfo(models.Model):#create user information model
     def denotify(self):#when someone cancel request amount of notify should be decrease
         self.match_request = self.match_request - 1
         self.save()
+    def check_birthday(self):#check birthday if today is the user birthday update age user
+        if ((datetime.now().year-self.birthday.year)-int(self.age))==1:
+            if (self.birthday.day <= datetime.now().day and self.birthday.month <= datetime.now().month):
+                self.age =  str(datetime.now().year-self.birthday.year)
+                self.save()
 
 class Comment(models.Model):#create comment model
     post = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name='comments', null=True)#link this model to userinfo
@@ -74,7 +80,7 @@ class Profile(models.Model):#create a profile model,this model is same Userinfo 
     email = models.EmailField(max_length=150)
     age = models.TextField(max_length=10, blank=True)
     bio = models.TextField()
-
+    birthday = models.DateTimeField(default=datetime.now,blank=True)
     def __str__(self):
         return self.user.username
 class Profilepicture(models.Model):#this model create for Profile picture

@@ -71,7 +71,7 @@
                 </li>
             </ul>
             <div class="navbar-buttons mbr-section-btn">
-                <a class="btn btn-sm btn-primary display-4" href="/{{ user_infomation.id }}/personal_profile">
+                <a class="btn btn-sm btn-primary display-4" href="{% url 'tinder:personal_profile' user_infomation.id %}">
                     Profile : {{ user_infomation.firstname }}
                 </a>
             </div>
@@ -133,7 +133,7 @@
           <div class="row media-row">
             {% for key,value in infoma.items %}
               <div class="team-item col-lg-3 col-md-6">
-                  <a href="/{{ key.id }}/profile">
+                  <a href="{% url 'tinder:profile' key.id %}">
                 <div class="item-image">
                     <img src="{{ value.images.url }}">
                 </div>

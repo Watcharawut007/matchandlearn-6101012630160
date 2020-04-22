@@ -78,7 +78,7 @@
     <input type="hidden" name="login" value="{{ next }}" />
     {% for field in form %}
         {% if forloop.counter0 != 6 %}
-      <input class="form-control" id="{% if forloop.counter0 == 7 %}id_email{% elif forloop.counter0 == 8 %}id_college{% else %}{{ field.id_for_label }}{% endif %}" placeholder="{% if forloop.counter0 == 0 %}Username{% elif forloop.counter0 == 1 %}Password{% elif forloop.counter0 == 2 %}Confirm Password{% elif forloop.counter0 == 3 %}First Name{% elif forloop.counter0 == 4 %}Last Name{% elif forloop.counter0 == 5 %}Age{% elif forloop.counter0 == 7 %}Email{% elif forloop.counter0 == 8 %}College{% endif %}" name="{% if forloop.counter0 == 7 %}email{% elif forloop.counter0 == 8 %}college{% else %}{{ field.html_name }}{% endif %}" type="{% if forloop.counter0 == 1 %}password{% elif forloop.counter0 == 2 %}password{% elif forloop.counter0 == 7 %}email{% else %}text{% endif %}"/><p></p>
+      <input class="form-control" id="{% if forloop.counter0 == 7 %}id_email{% elif forloop.counter0 == 8 %}id_college{% elif forloop.counter0 == 9 %}birthday{% else %}{{ field.id_for_label }}{% endif %}" placeholder="{% if forloop.counter0 == 0 %}Username{% elif forloop.counter0 == 1 %}Password{% elif forloop.counter0 == 2 %}Confirm Password{% elif forloop.counter0 == 3 %}First Name{% elif forloop.counter0 == 4 %}Last Name{% elif forloop.counter0 == 5 %}Age{% elif forloop.counter0 == 7 %}Email{% elif forloop.counter0 == 8 %}College{% elif forloop.counter0 == 9 %}birthday: mm/dd/year{% endif %}" name="{% if forloop.counter0 == 7 %}email{% elif forloop.counter0 == 8 %}college{% elif forloop.counter0 == 9 %}birthday{% else %}{{ field.html_name }}{% endif %}" type="{% if forloop.counter0 == 1 %}password{% elif forloop.counter0 == 2 %}password{% elif forloop.counter0 == 7 %}email{% elif forloop.counter0 == 9 %}datetime{% else %}text{% endif %}"/><p></p>
     {% elif forloop.counter0 == 6 %}
    <select class="custom-select" name="gender" id="id_gender">
    <option selected disabled>Gender</option>
@@ -86,6 +86,7 @@
     <option value="Female">Female</option>
     <option value="Other">Other</option>
    </select><p></p>
+
         {% endif %}
         {% for error in field.errors %}
           <p style="color: red">{{ error }}</p>
@@ -94,6 +95,7 @@
   {% for error in field.errors %}
           <p style="color: red">{{ error }}</p>
         {% endfor %}
+
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
   <p></p>
     <a href="{% url 'tinder:login' %}">Back to login</a>

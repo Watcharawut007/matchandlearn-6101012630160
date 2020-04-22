@@ -109,9 +109,11 @@ bg{
         <div class="content">
             <h1>{{ profile.firstname }} {{ profile.lastname }}</h1>
             <div class="about-text">
+                <p hidden>{{ profile.check_birthday }}</p>
                 <p id="age_id">age: {{ profile.age }}</p>
                 <p id="school_id">school: {{profile.school }}</p>
                 <p id ="gender">gender: {{ profile.gender }}</p>
+                <p id="birthday_id">birthday: {{ profile.birthday.date }}</p>
             </div>
         </div>
     </header>

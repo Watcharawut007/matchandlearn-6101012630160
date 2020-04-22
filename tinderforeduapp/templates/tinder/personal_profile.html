@@ -88,7 +88,7 @@ bg{
     <li><a name = "Privacy Policy" href="{% url 'tinder:privacy' %}">Privacy Policy</a></li>
     <li style="float:right"><a href="{% url 'tinder:logout' %}">Logout</a></li>
     <li style="float:right"><a href="{% url 'tinder:faq' %}">Help</a></li>
-    <li style="float:right"><a href="/{{ user_infomation.id }}/personal_profile">Profile : {{ user_infomation.first_name }}</a></li>
+    <li style="float:right"><a href="/{{ user_infomation.id }}/personal_profile">Profile : {{ user_infomation.firstname }}</a></li>
 </ul>
 <body id="page-top" data-spy="scroll" data-target=".navbar">
 <div id="main-wrapper">
@@ -112,6 +112,7 @@ bg{
                 <p id="age_id">age: {{ user_infomation.age }}</p>
                 <p id="school_id">school: {{ user_infomation.school }}</p>
                 <p id ="bio">gender: {{ user_infomation.gender }}</p>
+                <p id="birthday">birthday: {{ user_infomation.birthday.date }}</p>
             </div>
             <form action="{% url 'tinder:edit_profile' user_infomation.id %}">
             <input class="btn btn-primary" type="submit" value="Edit profile" />
@@ -200,7 +201,7 @@ bg{
 </div>
 <!-- .columns-block -->
 </div>
-<!-- #main-wrapper -->
+<!-- #Fin-wrapper -->
 
 <!-- jquery -->
 <script src="{% static 'profile/js/jquery-2.1.4.min.js'%}"></script>

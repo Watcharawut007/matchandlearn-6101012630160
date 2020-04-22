@@ -11,11 +11,11 @@ class SignUpForm(UserCreationForm): #form sign up
     gender = forms.CharField(max_length=20)
     email = forms.EmailField(max_length=150)
     age = forms.CharField(max_length=10)
-
+    birthday = forms.DateTimeField(label='birthday')
     class Meta:
         model = User #link data in field to keep in user model
         fields = ('username', 'password1', 'password2', 'first_name', 'last_name', 'age',
-'email', 'college', 'gender',)
+'email', 'college', 'gender','birthday')
 
 
 
@@ -49,7 +49,7 @@ class Editprofileform(forms.ModelForm):#edit profile form
 
     class Meta:
         model = UserInfo #link data in form to userintfo model
-        fields = ['firstname', 'lastname', 'age', 'school', 'gender', ]
+        fields = ['firstname', 'lastname', 'age', 'school', 'gender','birthday' ]
 
 class profilepicture(forms.ModelForm): #change profile picture form
     class Meta:
