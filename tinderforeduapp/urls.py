@@ -18,7 +18,7 @@ urlpatterns = [  #link between function and url when user connect to url functio
     path('login/', LoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(next_page='/login'), name="logout"),
     url(r'^signup/$', core_views.signup, name='signup'),
-    path('<int:user_id>/profile/',views.another_profile,name='profile'),
+    path('<int:user_id>/profile/',views.another_profile,name='another_profile'),
     path('chat/', include('chat.urls')),
     path('<int:user_id>/send_request/', views.send_request, name="send_request"),
     path('<int:user_id>/unsend_request/', views.unsend_request, name="unsend_request"),

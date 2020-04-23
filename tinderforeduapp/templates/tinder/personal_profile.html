@@ -81,7 +81,7 @@ bg{
     <![endif]-->
 </head>
 <ul>
-  <li><a href="/">Home</a></li>
+  <li><a id ="home" href="/">Home</a></li>
   <li><a name = "Students and Tutor list" href="{% url 'tinder:tutor_student_list' user_infomation.id %}">Students and Tutor list</a></li>
     <li ><a name = "Match request" href="{% url 'tinder:request_list' user_infomation.id %}" {% if user_infomation.match_request > 0 %}class="notification"{% endif %}><span>Student request</span>{% if user_infomation.match_request > 0 %}<span name= "value_notificate" class="badge">{{ user_infomation.match_request }}</span>{% endif %}</a></li>
     <li><a name = "About us" href="{% url 'tinder:aboutus' %}">About</a></li>
@@ -112,7 +112,7 @@ bg{
                 <p id="age_id">age: {{ user_infomation.age }}</p>
                 <p id="school_id">school: {{ user_infomation.school }}</p>
                 <p id ="bio">gender: {{ user_infomation.gender }}</p>
-                <p id="birthday">birthday: {{ user_infomation.birthday.date }}</p>
+                <p id="birthday_id">birthday: {{ user_infomation.birthday.date }}</p>
             </div>
             <form action="{% url 'tinder:edit_profile' user_infomation.id %}">
             <input class="btn btn-primary" type="submit" value="Edit profile" />

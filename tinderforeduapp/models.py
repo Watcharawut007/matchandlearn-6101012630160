@@ -52,10 +52,23 @@ class UserInfo(models.Model):#create user information model
     def denotify(self):#when someone cancel request amount of notify should be decrease
         self.match_request = self.match_request - 1
         self.save()
-    def check_birthday(self,now):#check birthday if today is the user birthday then update age
-        if ((now.year-self.birthday.year)-int(self.age))!=0:#check when user do not login for long time
-            if (self.birthday.day <= now.day and self.birthday.month <= now.month) or self.birthday.month < now.month:#check when user age should be increase
-                self.age =  str(now.year-self.birthday.year)
+    def check_birthday(self, date):#check birthday if today is the user birthday then update age
+        if ((date.year - self.birthday.year) - int(self.age))!=1:#check when user edit his birthday
+            self.age = str(date.year - self.birthday.year)
+            self.save()
+        if ((date.year - self.birthday.year) - int(self.age))==1:#check when user do not login for long time
+            if (self.birthday.day <= date.day and self.birthday.month <= date.month):#check when user age should be increase
+                self.age = str(date.year - self.birthday.year)
+                self.save()
+            elif self.birthday.month < date.month:
+                self.age = str(date.year - self.birthday.year)
+                self.save()
+        if ((date.year - self.birthday.year) - int(self.age))==0:#check when user enter wrong age because the user birthday do not pass yet
+            if (self.birthday.day > date.day and self.birthday.month >= date.month):
+                self.age = str(int(self.age)-1)
+                self.save()
+            elif self.birthday.month > date.month:
+                self.age = str(int(self.age)-1)
                 self.save()
 
 class Comment(models.Model):#create comment model

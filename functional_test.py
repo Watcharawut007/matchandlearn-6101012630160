@@ -1,8 +1,14 @@
+from datetime import datetime
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 import unittest
-
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.select import Select
+'''from django.contrib.gis.gdal import driver'''
 '''
 class NewVisitorTest(unittest.TestCase):
 
@@ -228,7 +234,7 @@ class signUp(unittest.TestCase):
 
 """
 
-
+"""
 class Chat(unittest.TestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -375,6 +381,106 @@ class Chat(unittest.TestCase):
             "tongu19541 : I'm Tong\n"
         )
         time.sleep(2)
+"""
+class check_birthday(unittest.TestCase):
+    def setUp(self):
+        self.browser = webdriver.Firefox()
+
+    def tearDown(self):
+        self.browser.quit()
+    def test_user_check_his_age_and_another_user(self):
+        if datetime.now().year == 2020:
+            self.browser.get('http://127.0.0.1:8000/login') #user go to login page
+            username_box = self.browser.find_element_by_name('username')#user see the username field
+            password_box = self.browser.find_element_by_name('password')#user see the password field
+            # user enter his username/password
+            username_box.send_keys('watcharawut009')
+            password_box.send_keys("tongu20068")
+            #user notices the login button and he click it
+            login_button = self.browser.find_element_by_tag_name('button')
+            login_button.click()
+            time.sleep(2)
+            # user notices the Profile button and he clickit
+            profile_button = self.browser.find_element_by_id('personal_profile_id')
+            profile_button.click()
+            time.sleep(1)
+            # user notices his age
+            age_user = self.browser.find_element_by_id('age_id').text
+            self.assertIn(age_user,'age: 20')
+            # user notices his birthday
+            birthday_user = self.browser.find_element_by_id('birthday_id').text
+            self.assertIn(birthday_user,'birthday: April 24, 2000')
+            time.sleep(2)
+            # user wants to back to home page
+            back_to_home_button = self.browser.find_element_by_id('home')
+            back_to_home_button.click()
+            time.sleep(1)
+            # user wants to find tutor to teach math2
+            search_box = self.browser.find_element_by_name('tutor_find')
+            search_box.send_keys('math2')
+            time.sleep(1)
+            # user notices the search button and he click it
+            search_button = self.browser.find_element_by_id('search_button')
+            search_button.click()
+            time.sleep(2)
+            # user notices the first tutor that he found and he want to see his profile
+            search_result = self.browser.find_element_by_id('1')
+            search_result.click()
+            # user notices his age
+            age_anotheruser = self.browser.find_element_by_id('age_id').text
+            self.assertIn(age_anotheruser, 'age: 31')
+            # user notices his birthday
+            birthday_user = self.browser.find_element_by_id('birthday_id').text
+            self.assertIn(birthday_user, 'birthday: April 25, 1989')
+            time.sleep(2)
+
+    def  test_user_check_his_age_and_another_user_when_1_year_past(self):
+        if datetime.now().year == 2021:
+            self.browser.get('http://127.0.0.1:8000/login')  # user go to login page
+            username_box = self.browser.find_element_by_name('username')  # user see the username field
+            password_box = self.browser.find_element_by_name('password')  # user see the password field
+            # user enter his username/password
+            username_box.send_keys('watcharawut009')
+            password_box.send_keys("tongu20068")
+            # user notices the login button and he click it
+            login_button = self.browser.find_element_by_tag_name('button')
+            login_button.click()
+            time.sleep(2)
+            # user notices the Profile button and he clickit
+            profile_button = self.browser.find_element_by_id('personal_profile_id')
+            profile_button.click()
+            time.sleep(1)
+            # user notices his age
+            age_user = self.browser.find_element_by_id('age_id').text
+            self.assertIn(age_user, 'age: 21')
+            # user notices his birthday
+            birthday_user = self.browser.find_element_by_id('birthday_id').text
+            self.assertIn(birthday_user, 'birthday: April 24, 2000')
+            time.sleep(2)
+            # user wants to back to home page
+            back_to_home_button = self.browser.find_element_by_id('home')
+            back_to_home_button.click()
+            time.sleep(1)
+            # user wants to find tutor to teach math2
+            search_box = self.browser.find_element_by_name('tutor_find')
+            search_box.send_keys('math2')
+            time.sleep(1)
+            # user notices the search button and he click it
+            search_button = self.browser.find_element_by_id('search_button')
+            search_button.click()
+            time.sleep(2)
+            # user notices the first tutor that he found and he want to see his profile
+            search_result = self.browser.find_element_by_id('1')
+            search_result.click()
+            # user notices his age
+            age_anotheruser = self.browser.find_element_by_id('age_id').text
+            self.assertIn(age_anotheruser, 'age: 32')
+            # user notices his birthday
+            birthday_user = self.browser.find_element_by_id('birthday_id').text
+            self.assertIn(birthday_user, 'birthday: April 25, 1989')
+            time.sleep(2)
+
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')

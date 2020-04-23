@@ -38,7 +38,7 @@
                     </a>
                 </span>
                 <span class="navbar-caption-wrap">
-                    <a class="navbar-caption text-white display-4" href="{% url 'tinder:home' %}">
+                    <a id ="home_button" class="navbar-caption text-white display-4" href="{% url 'tinder:home' %}">
                         Match and Learn
                     </a>
                 </span>
@@ -71,7 +71,7 @@
                 </li>
             </ul>
             <div class="navbar-buttons mbr-section-btn">
-                <a class="btn btn-sm btn-primary display-4" href="{% url 'tinder:personal_profile' user_infomation.id %}">
+                <a id = "personal_profile_id" class="btn btn-sm btn-primary display-4" href="{% url 'tinder:personal_profile' user_infomation.id %}">
                     Profile : {{ user_infomation.firstname }}
                 </a>
             </div>
@@ -109,7 +109,7 @@
                                 </select>
                                 </div>
                                 <div class="col-md-12 input-group-btn">
-                                    <button type="submit" class="btn btn-secondary btn-form display-4">Search</button>
+                                    <button id='search_button'type="submit" class="btn btn-secondary btn-form display-4">Search</button>
                                 </div>
                             </div>
                         </form><!---Formbuilder Form--->
@@ -133,9 +133,9 @@
           <div class="row media-row">
             {% for key,value in infoma.items %}
               <div class="team-item col-lg-3 col-md-6">
-                  <a href="{% url 'tinder:profile' key.id %}">
+                  <a href="{% url 'tinder:another_profile' key.id %}">
                 <div class="item-image">
-                    <img src="{{ value.images.url }}">
+                    <img id = '{{ forloop.counter }}' src="{{ value.images.url }}">
                 </div>
                 <div class="item-caption py-3">
                     <div class="item-name px-2">
