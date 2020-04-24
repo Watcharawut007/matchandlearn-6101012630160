@@ -172,7 +172,7 @@ bg{
                 <option value="5">5</option>
             </select></p>
           {% csrf_token %}
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button id='comment_submit_id' type="submit" class="btn btn-primary">Submit</button>
         </form>
         {% endif %}
       </div>
@@ -197,11 +197,11 @@ bg{
               {{ comment.created_on }}
             </span>
           </p>
-           Comment : {{ comment.comment }} </br>
+                  <p id ={{ comment.name }}>Comment : {{ comment.comment }}</p>
            Star : {{ comment.star }}
         <form  method="post" action="{% url 'tinder:watch_profile' profile.id %}">
                         {% csrf_token %}
-                        <button class="btn btn-primary"  name="remove_comment" value="{{ comment.id }}" >remove</button>
+                        <button id='{{ comment.name }}_delete_comment' class="btn btn-primary"  name="remove_comment" value="{{ comment.id }}" >remove</button>
                     </form>
             {% else %}
         <div class="comments" style="padding: 10px;">
@@ -211,7 +211,7 @@ bg{
               {{ comment.created_on }}
             </span>
           </p>
-           Comment : {{ comment.comment }} </br>
+           <p id ={{ comment.name }}>Comment : {{ comment.comment }}</p>
            Star : {{ comment.star }}
         </div>
             {% endif %}

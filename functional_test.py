@@ -390,7 +390,7 @@ class check_birthday(unittest.TestCase):
 
     def tearDown(self):
         self.browser.quit()
-    def test_user_check_his_age_and_another_user(self):
+    def user_check_his_age_and_another_user(self):
         if datetime.now().year == 2020:
             self.browser.get('http://127.0.0.1:8000/login') #user go to login page
             username_box = self.browser.find_element_by_name('username')#user see the username field
@@ -440,14 +440,14 @@ class check_birthday(unittest.TestCase):
 
             # user notices his age
             age_anotheruser = self.browser.find_element_by_id('age_id').text
-            self.assertIn(age_anotheruser, 'age: 30')
+            self.assertIn(age_anotheruser, 'age: 31')
 
             # user notices his birthday
             birthday_user = self.browser.find_element_by_id('birthday_id').text
             self.assertIn(birthday_user, 'birthday: April 25, 1989')
             time.sleep(2)
 
-    def  test_user_check_his_age_and_another_user_when_1_year_past(self):
+    def  user_check_his_age_and_another_user_when_1_year_past(self):
         if  datetime.now().year == 2021:
             self.browser.get('http://127.0.0.1:8000/login')  # user go to login page
             username_box = self.browser.find_element_by_name('username')  # user see the username field
@@ -504,7 +504,104 @@ class check_birthday(unittest.TestCase):
             self.assertIn(birthday_user, 'birthday: April 25, 1989')
             time.sleep(2)
 
+class remove_comment(unittest.TestCase):
+    def setUp(self):
+        self.browser = webdriver.Firefox()
 
+    def tearDown(self):
+        self.browser.quit()
+    def user_can_comment_to_another_user_who_matched_with_him_and_can_delete_it(self):
+        # watcharawut login to Match and Learn website
+        self.browser.get('http://127.0.0.1:8000/login')
+        username_box = self.browser.find_element_by_name('username')  # user see the username field
+        password_box = self.browser.find_element_by_name('password')  # user see the password field
+        username_box.send_keys('watcharawut009')
+        password_box.send_keys("tongu20068")
 
+        # He notices the login button and he click it
+        login_button = self.browser.find_element_by_tag_name('button')
+        login_button.click()
+        time.sleep(2)
+
+        # He go to student and tutor list
+        student_and_tutor_list_btn = self.browser.find_element_by_id('tutor_student_list_id')
+        student_and_tutor_list_btn.click()
+        time.sleep(2)
+
+        # He click on kitsanapong profile
+        kitsanapong_profile = self.browser.find_element_by_id('kitsanapong')
+        kitsanapong_profile.click()
+        time.sleep(2)
+
+        # He enter comment  "kitsanapong is a good student"
+        comment = self.browser.find_element_by_id('id_comment')
+        comment.send_keys("kitsanapong is a good student")
+        time.sleep(2)
+
+        # So, He give score to kitsanapong 4 star
+        self.browser.find_element_by_xpath("//select[@name='star']/option[text()='4']").click()
+
+        # He submit comment
+        comment_button = self.browser.find_element_by_id('comment_submit_id')
+        comment_button.click()
+        time.sleep(2)
+
+        # He saw comment that he posted
+        comment_text = self.browser.find_element_by_id('watcharawut').text
+        self.assertEqual(comment_text, "Comment : kitsanapong is a good student")
+        time.sleep(2)
+
+        # He thinks he want to delete his comment maybe he change his mine
+        comment_delete_button = self.browser.find_element_by_id('watcharawut_delete_comment')
+        comment_delete_button.click()
+        time.sleep(2)
+
+    def test_user_can_not_delete_another_user_comment(self):
+        self.browser.get('http://127.0.0.1:8000/login')
+        username_box = self.browser.find_element_by_name('username')  # user see the username field
+        password_box = self.browser.find_element_by_name('password')  # user see the password field
+        username_box.send_keys('watcharawut007')
+        password_box.send_keys("tongu4590")
+
+        # He notices the login button and he click it
+        login_button = self.browser.find_element_by_tag_name('button')
+        login_button.click()
+        time.sleep(2)
+
+        # He go to student and tutor list
+        student_and_tutor_list_btn = self.browser.find_element_by_id('tutor_student_list_id')
+        student_and_tutor_list_btn.click()
+        time.sleep(2)
+
+        # He click on watcharawut  profile
+        kitsanapong_profile = self.browser.find_element_by_id('watcharawut')
+        kitsanapong_profile.click()
+        time.sleep(2)
+
+        # He enter comment  "i can not understand everything that he taught me"
+        comment = self.browser.find_element_by_id('id_comment')
+        comment.send_keys("i can not understand everything that he taught me")
+        time.sleep(2)
+
+        # So, He give score to watcharawut 2 star
+        self.browser.find_element_by_xpath("//select[@name='star']/option[text()='2']").click()
+
+        # He submit comment
+        comment_button = self.browser.find_element_by_id('comment_submit_id')
+        comment_button.click()
+        time.sleep(2)
+
+        # He saw comment that he posted
+        comment_text = self.browser.find_element_by_id('kitsanapong').text
+        self.assertEqual(comment_text, "Comment : i can not understand everything that he taught me")
+        time.sleep(2)
+
+        another_comment = self.browser.find_element_by_id('Theeraphat').text
+        self.assertEqual(another_comment,"Comment : good teacher")
+        try:
+            another_comment_delete=self.browser.find_element_by_id('Theeraphat_delete_comment')
+        except:
+            pass
+        time.sleep(2)
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
