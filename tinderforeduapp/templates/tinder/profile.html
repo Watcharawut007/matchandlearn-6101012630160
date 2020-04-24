@@ -89,7 +89,7 @@ bg{
     <li><a name = "Privacy Policy" href="{% url 'tinder:privacy' %}">Privacy Policy</a></li>
     <li style="float:right"><a href="{% url 'tinder:logout' %}">Logout</a></li>
     <li style="float:right"><a href="{% url 'tinder:faq' %}">Help</a></li>
-    <li style="float:right"><a href="/{{ user_infomation.id }}/personal_profile">Profile : {{ user_infomation.first_name }}</a></li>
+    <li style="float:right"><a href="/{{ user_infomation.id }}/personal_profile">Profile : {{ user_infomation.firstname }}</a></li>
 </ul>
 <body id="page-top" data-spy="scroll" data-target=".navbar">
 <div id="main-wrapper">
@@ -181,8 +181,9 @@ bg{
                 <h2>{{ comments.count }} comments</h2>
 
         {% for comment in comments %}
-        <div class="comments" style="padding: 10px;">
+            <div class="comments" style="padding: 10px;">
           <p class="font-weight-bold">
+
             {{ comment.name }}
             <span class=" text-muted font-weight-normal">
               {{ comment.created_on }}

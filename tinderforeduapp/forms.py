@@ -10,11 +10,10 @@ class SignUpForm(UserCreationForm): #form sign up
     college = forms.CharField(max_length=100)
     gender = forms.CharField(max_length=20)
     email = forms.EmailField(max_length=150)
-    age = forms.CharField(max_length=10)
     birthday = forms.DateTimeField(label='birthday')
     class Meta:
         model = User #link data in field to keep in user model
-        fields = ('username', 'password1', 'password2', 'first_name', 'last_name', 'age',
+        fields = ('username', 'password1', 'password2', 'first_name', 'last_name',
 'email', 'college', 'gender','birthday')
 
 
@@ -28,6 +27,7 @@ class CommentForm(forms.ModelForm): #comment form
             ('5', '5'),
         ]
     star = forms.CharField(label="Choose your score", widget=forms.Select(choices=star_score)) #star
+
     class Meta:
         model = Comment #link data that get from star to comment model
         fields = ('comment','star',)

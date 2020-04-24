@@ -89,7 +89,7 @@ bg{
     <li><a name = "Privacy Policy" href="{% url 'tinder:privacy' %}">Privacy Policy</a></li>
     <li style="float:right"><a href="{% url 'tinder:logout' %}">Logout</a></li>
     <li style="float:right"><a href="{% url 'tinder:faq' %}">Help</a></li>
-    <li style="float:right"><a href="/{{ user_information.id }}/personal_profile">Profile : {{ user.firstname }}</a></li>
+    <li style="float:right"><a href="/{{ user_information.id }}/personal_profile">Profile : {{ user_information.firstname }}</a></li>
 </ul>
 <body id="page-top" data-spy="scroll" data-target=".navbar">
 <div id="main-wrapper">
@@ -112,6 +112,7 @@ bg{
                 <p id="age_id">age: {{ profile.age }}</p>
                 <p id="school_id">school: {{profile.school }}</p>
                 <p id ="gender">gender: {{ profile.gender }}</p>
+                <p id ="birthday">birthday: {{ profile.birthday.date }}</p>
             </div>
         </div>
     </header>
@@ -187,6 +188,22 @@ bg{
                 <h2>{{ comments.count }} comments</h2>
 
         {% for comment in comments %}
+              {% if comment.name  ==  user_information.firstname %}
+        <div class="comments" style="padding: 10px;">
+          <p class="font-weight-bold">
+
+            {{ comment.name }}
+            <span class=" text-muted font-weight-normal">
+              {{ comment.created_on }}
+            </span>
+          </p>
+           Comment : {{ comment.comment }} </br>
+           Star : {{ comment.star }}
+        <form  method="post" action="{% url 'tinder:watch_profile' profile.id %}">
+                        {% csrf_token %}
+                        <button class="btn btn-primary"  name="remove_comment" value="{{ comment.id }}" >remove</button>
+                    </form>
+            {% else %}
         <div class="comments" style="padding: 10px;">
           <p class="font-weight-bold">
             {{ comment.name }}
@@ -197,6 +214,7 @@ bg{
            Comment : {{ comment.comment }} </br>
            Star : {{ comment.star }}
         </div>
+            {% endif %}
         {% endfor %}
             </div>
         </div>

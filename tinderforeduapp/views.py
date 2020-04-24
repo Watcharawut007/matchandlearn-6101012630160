@@ -36,20 +36,19 @@ def signup(request):#this function is used when user signup
             user.profile.last_name = form.cleaned_data.get('last_name')
             user.profile.email = form.cleaned_data.get('email')
             user.profile.college = form.cleaned_data.get('college')
-            user.profile.age = form.cleaned_data.get('age')
             user.profile.gender = form.cleaned_data.get('gender')
             user.profile.birthday = form.cleaned_data.get('birthday')
             #create a model for collect a information user
             new_user = UserInfo.objects.create(name=user.username,
                                               school=user.profile.college,
                                               school_keyword=change_school_to_keyword(user.profile.college),
-                                              age=user.profile.age,
                                               firstname=user.profile.first_name,
                                               lastname=user.profile.last_name,
                                               gender =user.profile.gender,
                                               birthday=user.profile.birthday)
             #Add profile picture in model with default.png
             Profilepicture.objects.create(user=new_user, images='default.png')
+            new_user.check_birthday(datetime_now)
             #save model
             new_user.save()
             user.save()
@@ -90,7 +89,7 @@ def account_activate(request, uidb64, token, backend='django.contrib.auth.backen
 
 def personal_profile(request, user_id):#this function is used to watch personal profile
     User = UserInfo.objects.get(name=request.user.username)#get a data user to display on browser
-    comments = Comment.objects.filter(post=request.user.id)#get comment that another user commend
+    comments = Comment.objects.filter(post=User)#get comment that another user commend
     profile_picture = Profilepicture.objects.get(user=User)#get a profile picture
     User.check_birthday(datetime_now)#check birthday user
     all_expertise_subject = UserInfo.objects.get(name=request.user.username).expertise.all()
@@ -122,7 +121,7 @@ def another_profile(request,user_id):#this function is used to watch another use
     another_people = UserInfo.objects.get(id=user_id)  # get model user that he want to see
     another_people.check_birthday(datetime_now)  # check birthday user
     picture = Profilepicture.objects.get(user=user_id)#get profile picture
-    comments = Comment.objects.filter(post=request.user.id)#get comment
+    comments = Comment.objects.filter(post=another_people)#get comment
 
     Username = UserInfo.objects.get(name=request.user.username)#get model user
     #create chat room url
@@ -237,8 +236,9 @@ def request_list(request, user_id):#show all users that what to match with this 
 def send_request(request, user_id):#this function is used when user want to send request to another user
     #load all user data and another users data
     Username = UserInfo.objects.get(name=request.user.username)
-    picture = Profilepicture.objects.get(user=user_id)
-    comments = Comment.objects.filter(post=request.user.id)
+    another_user = UserInfo.objects.get(id=user_id)
+    picture = Profilepicture.objects.get(id=user_id)
+    comments = Comment.objects.filter(post=another_user )
     another_people = UserInfo.objects.get(id=user_id)
     #just create chat url link if he already match
     Url_list = [Username.name, another_people.name]
@@ -275,8 +275,8 @@ def unsend_request(request, user_id): #this function is used when user want to u
     # load all user data and another users data
     Username = UserInfo.objects.get(name=request.user.username)
     picture = Profilepicture.objects.get(user=user_id)
-    comments = Comment.objects.filter(post=request.user.id)
     another_people = UserInfo.objects.get(id=user_id)
+    comments = Comment.objects.filter(post=another_people)
     # just create chat url link if he already matched
     Url_list = [Username.name, another_people.name]
     Url_list_sort = sorted(Url_list)
@@ -340,8 +340,9 @@ def tutor_student_list(request, user_id):#this function is used to display tutor
 
     for i in match_list_id:
         list_sort = []
-        key = UserInfo.objects.get(name=i.myself)#get people in key
+        key = UserInfo.objects.get(name=i.another_user)#get people in key
         #sorted for create url chat
+        key.check_birthday(datetime_now)
         list_sort = sorted([UserInfo.objects.get(name=request.user.username).name, UserInfo.objects.get(name=i.myself).name])
         value = list_sort[0]+"_"+list_sort[1]
         list_match[key]=value #let value be a url chat and key be a user model
@@ -354,8 +355,8 @@ def watch_profile(request,user_id):#this function is used when user watch anothe
     another_people = UserInfo.objects.get(id=user_id)
     another_people.check_birthday(datetime_now)#check birthday user
     post = get_object_or_404(UserInfo, name=another_people.name)
-    picture = Profilepicture.objects.get(user=user_id)
     comments = post.comments.filter(active=True)
+    picture = Profilepicture.objects.get(user=user_id)
     new_comment = None #set default if this user do not comment yet
     if request.method == 'POST':#if user comment
         comment_form = CommentForm(data=request.POST)#get form
@@ -365,12 +366,21 @@ def watch_profile(request,user_id):#this function is used when user watch anothe
             new_comment = comment_form.save(commit=False)
             # Assign the current post to the comment
             new_comment.post = post
-            new_comment.name = request.user.username
+            new_comment.name = UserInfo.objects.get(name=request.user.username).firstname
             # Save the comment to the database
             new_comment.save()
+            return render(request,'tinder/watch_profile.html',{'comments': comments,
+                                                   'pic': picture,
+                                                   'user_information': UserInfo.objects.get(name=request.user.username),
+                                                   'subject': UserInfo.objects.get(id=user_id).expertise.all(),
+                                                    'profile': UserInfo.objects.get(id=user_id)})
 
     else:
         comment_form = CommentForm()#display form
+    if request.POST.get('remove_comment'):
+        delete_comment = Comment.objects.get(id=request.POST['remove_comment'])
+        Comment.delete(delete_comment)
+        return HttpResponseRedirect(reverse('tinder:watch_profile', args=(another_people.id,)))
     if request.POST.get('unmatch'):#user want to unmatch (its like unfriend in facebook)
         Username = UserInfo.objects.get(name=request.user.username)#Collect this user data
         #remove match class
