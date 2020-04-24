@@ -141,8 +141,8 @@ def another_profile(request,user_id):#this function is used to watch another use
     return render(request,'tinder/profile.html',
                   {'comments': comments,
                    'pic':picture,
-                   'profile': modelget,
-                   'subject':modelget.expertise.all(),
+                   'profile': another_people,
+                   'subject':another_people.expertise.all(),
                    'user_infomation': UserInfo.objects.get(name =request.user.username),
                    "chat_room_name":Url_chat})
 
