@@ -7,6 +7,7 @@ admin.site.register(Chatroom)
 admin.site.register(Comment)
 admin.site.register(Profilepicture)
 admin.site.register(Matchmodel)
+admin.site.register(Requestmodel)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('name', 'comment', 'post', 'created_on', 'active')
     list_filter = ('active', 'created_on')

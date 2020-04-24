@@ -286,11 +286,14 @@ def unsend_request(request, user_id): #this function is used when user want to u
         Username = UserInfo.objects.get(name=request.user.username)
         another_people = UserInfo.objects.get(id=user_id)
         remove_match = another_people.request.get(who_send=Username.name,who_recive=another_people.name)#get request model that is used send to
-        another_people.request.remove(remove_match)#remove request model
+        another_people.request.remove(remove_match)#remove request model in userinfo
+        Requestmodel.delete(remove_match)#remove request model
         UserInfo.objects.get(id=user_id).denotify()#remove notify
         UserInfo.objects.get(id=user_id).save()#save db
-        return render({'subject': UserInfo.objects.get(id=user_id).expertise.all(),
-
+        return render(request,'tinder/profile.html',{'subject': UserInfo.objects.get(id=user_id).expertise.all(),
+                                                     'pic': picture,
+                                                     'user_infomation': UserInfo.objects.get(
+                                                         name=request.user.username),
                                                        'profile': UserInfo.objects.get(id=user_id),
                                                        'chat_room_name':Url_chat})#render profile template
     return render(request, 'tinder/profile.html', {'comments': comments,
@@ -314,12 +317,14 @@ def accept_or_decline_request(request, user_id):#this function is used when you 
         Username.match.add(match_obj)#add model to this user
         request_obj = Username.request.get(who_send=another_people.name,who_recive=Username.name)#remove request model
         Username.request.remove(request_obj)
+        Requestmodel.delete(request_obj)
         match_obj2 = Matchmodel.objects.create(another_user=Username.name, myself=another_people.name)#create match model to another user to easaily to display
         another_people.match.add(match_obj2)#add model to another user
         return HttpResponseRedirect(reverse('tinder:request_list', args=(Username.id,)))#redirect match_request template
     if request.POST.get('decline'):#user do not accept
         request_obj = Username.request.get(who_send=another_people.name,who_recive=Username.name)#remove request model
         Username.request.remove(request_obj)
+        Requestmodel.delete(request_obj)
         return HttpResponseRedirect(reverse('tinder:request_list', args=(Username.id,)))#redirect match_request template
     return render(request,
                   'tinder/profile_accept_or_decline.html',
@@ -371,8 +376,10 @@ def watch_profile(request,user_id):#this function is used when user watch anothe
         #remove match class
         unmatch_obj= Username.match.get(another_user=another_people.name, myself=Username.name)
         Username.match.remove(unmatch_obj)
+        Matchmodel.delete(unmatch_obj)
         unmatch_obj2= another_people.match.get(another_user=Username.name, myself=another_people.name)
         another_people.match.remove(unmatch_obj2)
+        Matchmodel.delete(unmatch_obj2)
         return HttpResponseRedirect(reverse('tinder:tutor_student_list', args=(Username.id,)))#redirect to tutor_student_list
     return render(request,'tinder/watch_profile.html',
                   {'pic':picture,
