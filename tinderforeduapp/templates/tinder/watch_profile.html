@@ -187,32 +187,32 @@ bg{
             <div class="col-md-12">
                 <h2>{{ comments.count }} comments</h2>
 
-        {% for comment in comments %}
-              {% if comment.name  ==  user_information.firstname %}
+        {% for key,value in people_comment.items %}
+              {% if key.name  ==  user_information.name %}
         <div class="comments" style="padding: 10px;">
           <p class="font-weight-bold">
 
-            {{ comment.name }}
+            {{ value.firstname }}
             <span class=" text-muted font-weight-normal">
-              {{ comment.created_on }}
+              {{ key.created_on }}
             </span>
           </p>
-                  <p id ={{ comment.name }}>Comment : {{ comment.comment }}</p>
-           Star : {{ comment.star }}
+                  <p id ={{ value.firstname }}>Comment : {{ key.comment }}</p>
+           Star : {{ key.star }}
         <form  method="post" action="{% url 'tinder:watch_profile' profile.id %}">
                         {% csrf_token %}
-                        <button id='{{ comment.name }}_delete_comment' class="btn btn-primary"  name="remove_comment" value="{{ comment.id }}" >remove</button>
+                        <button id='{{ value.firstname }}_delete_comment' class="btn btn-primary"  name="remove_comment" value="{{ key.id }}" >remove</button>
                     </form>
             {% else %}
         <div class="comments" style="padding: 10px;">
           <p class="font-weight-bold">
-            {{ comment.name }}
+            {{ value.firstname }}
             <span class=" text-muted font-weight-normal">
-              {{ comment.created_on }}
+              {{ key.created_on }}
             </span>
           </p>
-           <p id ={{ comment.name }}>Comment : {{ comment.comment }}</p>
-           Star : {{ comment.star }}
+           <p id ={{ value.firstname }}>Comment : {{ key.comment }}</p>
+           Star : {{ key.star }}
         </div>
             {% endif %}
         {% endfor %}

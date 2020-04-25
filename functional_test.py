@@ -128,8 +128,6 @@ class signUp(unittest.TestCase):
         input_first_name.send_keys("tu")
         input_last_name = self.browser.find_element_by_id("id_last_name")
         input_last_name.send_keys("pobthorn")
-        input_age = self.browser.find_element_by_id("id_age")
-        input_age.send_keys('50')
         input_email = self.browser.find_element_by_id("id_email")
         input_email.send_keys("ragr@gmail.com")
         input_college = self.browser.find_element_by_id("id_college")
@@ -384,6 +382,72 @@ class Chat(unittest.TestCase):
         )
         time.sleep(2)
 """
+class signup(unittest.TestCase):
+    def setUp(self):
+        self.browser = webdriver.Firefox()
+
+    def tearDown(self):
+        self.browser.quit()
+    def can_sign_up(self):
+        # tiffany wants to be a member so she clicks sign up link
+        self.browser.get('http://localhost:8000/signup')
+        time.sleep(1)
+
+        # She is invited to enter an information
+        #username
+        username_box = self.browser.find_element_by_id('username_id')
+        username_box.send_keys('Tiffany')
+        time.sleep(1)
+
+        #password
+        password_box = self.browser.find_element_by_id('password_id')
+        password_box.send_keys('Tiffany_password456')
+        time.sleep(1)
+
+        # password comfirm
+        password_comfirm_box =self.browser.find_element_by_id('password_confirm_id')
+        password_comfirm_box.send_keys('Tiffany_password456')
+        time.sleep(1)
+
+        # first name
+        firstname_box = self.browser.find_element_by_id('firstname_id')
+        firstname_box.send_keys('Tiffany')
+        time.sleep(1)
+
+        #lastname
+        lastname_box = self.browser.find_element_by_id('lastname_id')
+        lastname_box.send_keys('Warren')
+        time.sleep(1)
+
+        # collage
+        collage_box = self.browser.find_element_by_id('college_id')
+        collage_box.send_keys('Harvard')
+        time.sleep(1)
+
+        #gender
+        gender_select = self.browser.find_element_by_id('id_gender')
+        gender_select.send_keys('Female')
+        time.sleep(1)
+
+        #email
+        email_box =self.browser.find_element_by_id('email_id')
+        email_box.send_keys('tiffany456@hotmail.com')
+        time.sleep(1)
+
+        #birthday
+        birthday_box = self.browser.find_element_by_id('birthday_id')
+        birthday_box.send_keys('03/23/1989')
+        time.sleep(1)
+
+        #then she click sign up button
+        signup_button = self.browser.find_element_by_id('sighup_button_id')
+        self.assertEqual(
+            signup_button.get_attribute('type'),
+            'submit',
+        )
+
+        signup_button.click()
+        time.sleep(10)
 class check_birthday(unittest.TestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -497,7 +561,7 @@ class check_birthday(unittest.TestCase):
 
             # user notices his age
             age_anotheruser = self.browser.find_element_by_id('age_id').text
-            self.assertIn(age_anotheruser, 'age: 31')
+            self.assertIn(age_anotheruser, 'age: 32')
 
             # user notices his birthday
             birthday_user = self.browser.find_element_by_id('birthday_id').text
@@ -510,7 +574,7 @@ class remove_comment(unittest.TestCase):
 
     def tearDown(self):
         self.browser.quit()
-    def user_can_comment_to_another_user_who_matched_with_him_and_can_delete_it(self):
+    def test_user_can_comment_to_another_user_who_matched_with_him_and_can_delete_it(self):
         # watcharawut login to Match and Learn website
         self.browser.get('http://127.0.0.1:8000/login')
         username_box = self.browser.find_element_by_name('username')  # user see the username field
@@ -557,6 +621,7 @@ class remove_comment(unittest.TestCase):
         time.sleep(2)
 
     def test_user_can_not_delete_another_user_comment(self):
+        #kitsanapong login to Match and Learn website
         self.browser.get('http://127.0.0.1:8000/login')
         username_box = self.browser.find_element_by_name('username')  # user see the username field
         password_box = self.browser.find_element_by_name('password')  # user see the password field
@@ -574,8 +639,8 @@ class remove_comment(unittest.TestCase):
         time.sleep(2)
 
         # He click on watcharawut  profile
-        kitsanapong_profile = self.browser.find_element_by_id('watcharawut')
-        kitsanapong_profile.click()
+        watcharwaut_profile = self.browser.find_element_by_id('watcharawut')
+        watcharwaut_profile.click()
         time.sleep(2)
 
         # He enter comment  "i can not understand everything that he taught me"
@@ -596,8 +661,9 @@ class remove_comment(unittest.TestCase):
         self.assertEqual(comment_text, "Comment : i can not understand everything that he taught me")
         time.sleep(2)
 
+        # He saw Theeraphat comment that he thinks that it is lie and he try to delete it
         another_comment = self.browser.find_element_by_id('Theeraphat').text
-        self.assertEqual(another_comment,"Comment : good teacher")
+        self.assertEqual(another_comment,"Comment : he is good teacher")
         try:
             another_comment_delete=self.browser.find_element_by_id('Theeraphat_delete_comment')
         except:

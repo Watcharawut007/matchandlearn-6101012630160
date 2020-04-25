@@ -53,10 +53,10 @@ class UserInfo(models.Model):#create user information model
         self.match_request = self.match_request - 1
         self.save()
     def check_birthday(self, date):#check birthday if today is the user birthday then update age
-        if (self.birthday.day <= date.day and self.birthday.month <= date.month) or self.birthday.month < date.month:#check when user age should be increase
+        if (self.birthday.day <= date.day and self.birthday.month <= date.month) or self.birthday.month < date.month:#when user birthday passed in this year
              self.age = str(date.year - self.birthday.year)
              self.save()
-        elif (self.birthday.day > date.day and self.birthday.month >= date.month) or self.birthday.month > date.month:  # check when user age should be increase
+        elif (self.birthday.day > date.day and self.birthday.month >= date.month) or self.birthday.month > date.month:#when user birthday has not passed in this year
              self.age = str(date.year - self.birthday.year-1)
              self.save()
 

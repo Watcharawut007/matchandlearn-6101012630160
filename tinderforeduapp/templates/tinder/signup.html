@@ -18,8 +18,8 @@
         body {
             display: -ms-flexbox;
             display: flex;
-            -ms-flex-align: center;
-            align-items: center;
+            -ms-flex-align: baseline;
+            align-items: baseline;
             padding-top: 40px;
             padding-bottom: 40px;
             background-color: #f5f5f5;
@@ -38,6 +38,7 @@
             height: auto;
             padding: 10px;
             font-size: 16px;
+            width: 100%;
         }
 
         .form-signin .form-control:focus {
@@ -64,6 +65,11 @@
         .myfooter {
             background-color: #f6eedf;
         }
+        .input-group {
+        float: left;
+            align-items: center;
+
+        }
     </style>
 
 </head>
@@ -76,17 +82,26 @@
     <h2 class="h3 mb-3 font-weight-normal">Match and Learn</h2>
     {% csrf_token %}
     <input type="hidden" name="login" value="{{ next }}" />
+
     {% for field in form %}
-        {% if forloop.counter0 != 5 %}
-      <input class="form-control" id="{% if forloop.counter0 == 7 %}id_email{% elif forloop.counter0 == 8 %}id_college{% elif forloop.counter0 == 9 %}birthday{% else %}{{ field.id_for_label }}{% endif %}" placeholder="{% if forloop.counter0 == 0 %}Username{% elif forloop.counter0 == 1 %}Password{% elif forloop.counter0 == 2 %}Confirm Password{% elif forloop.counter0 == 3 %}First Name{% elif forloop.counter0 == 4 %}Last Name{% elif forloop.counter0 == 6 %}Email{% elif forloop.counter0 == 7 %}College{% elif forloop.counter0 == 8 %}birthday: mm/dd/year{% endif %}" name="{% if forloop.counter0 == 6 %}email{% elif forloop.counter0 == 7 %}college{% elif forloop.counter0 == 8 %}birthday{% else %}{{ field.html_name }}{% endif %}" type="{% if forloop.counter0 == 1 %}password{% elif forloop.counter0 == 2 %}password{% elif forloop.counter0 == 6 %}email{% elif forloop.counter0 == 8 %}datetime{% else %}text{% endif %}"/><p></p>
-    {% elif forloop.counter0 == 5 %}
-   <select class="custom-select" name="gender" id="id_gender">
+        {% if field == form.gender %}
+            <div class="row">
+       <span style="white-space: pre-line"><div class="input-group" >
+   <label for="id_gender">gender:</label></div></span>
+            <select class="custom-select" name="gender" id="id_gender">
+
    <option selected disabled>Gender</option>
     <option value="Male">Male</option>
     <option value="Female">Female</option>
     <option value="Other">Other</option>
-   </select><p></p>
-
+   </select><br>
+            </div>
+        {% else %}
+        <div class="row">
+       <span style="white-space: pre-line"><div class="input-group" >
+         <label for="{{ field.id_for_label }}" >{{ field.label }}</label>{{ field }}
+      </div> </span>
+     </div><p></p>
         {% endif %}
         {% for error in field.errors %}
           <p style="color: red">{{ error }}</p>
@@ -96,9 +111,10 @@
           <p style="color: red">{{ error }}</p>
         {% endfor %}
 
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+      <button id ='sighup_button_id' class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
   <p></p>
     <a href="{% url 'tinder:login' %}">Back to login</a>
   </form>
     </body>
+
 {% endblock %}

@@ -5,16 +5,23 @@ from .models import *
 
 
 class SignUpForm(UserCreationForm): #form sign up
-    first_name = forms.CharField(max_length=100)
-    last_name = forms.CharField(max_length=100)
-    college = forms.CharField(max_length=100)
-    gender = forms.CharField(max_length=20)
-    email = forms.EmailField(max_length=150)
-    birthday = forms.DateTimeField(label='birthday')
+    genderdata = [
+        ('male', 'male'),
+        ('female', 'female'),
+        ('orther', 'orther'),
+    ]
+    username= forms.CharField(max_length=100,label='Username :',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'enter your username','id':'username_id'}))
+    password1 = forms.CharField(max_length=100,label='Password :',widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'enter your password','id':'password_id','type':'password'}))
+    password2 = forms.CharField(max_length=100,label='Password Confirm :',widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'enter your password again','id':'password_confirm_id','type':'password'}))
+    first_name = forms.CharField(max_length=100,label='First name :',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'enter your firstname','id':'firstname_id'}))
+    last_name = forms.CharField(max_length=100,label='Last name :',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'enter your lastname','id':'lastname_id'}))
+    college = forms.CharField(max_length=100,label='College : ',widget=forms.TextInput(attrs={'class':'form-control','placeholder':'enter the college name','id':'college_id'}))
+    gender = forms.ChoiceField(label='gender :',widget=forms.Select(choices=genderdata,attrs={'class':'custom-select','placeholder':'select your gender','id':'id_gender'}))
+    email = forms.EmailField(max_length=150,label='Email :',widget=forms.EmailInput(attrs={'class':'form-control','placeholder':'example@gmail.com','id':'email_id','type':'Email'}))
+    birthday = forms.DateTimeField(label='birthday :',widget=forms.DateTimeInput(attrs={'class':'form-control','placeholder':'mm/dd/year','id':'birthday_id'}))
     class Meta:
         model = User #link data in field to keep in user model
-        fields = ('username', 'password1', 'password2', 'first_name', 'last_name',
-'email', 'college', 'gender','birthday')
+        fields=['username','password1','password2','first_name','last_name','college','gender','email','birthday']
 
 
 
