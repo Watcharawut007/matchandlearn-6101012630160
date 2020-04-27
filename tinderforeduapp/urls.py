@@ -25,7 +25,7 @@ urlpatterns = [  #link between function and url when user connect to url functio
     path('<int:user_id>/request_list/', views.request_list, name="request_list"),
     path('<int:user_id>/accept_or_decline_request/', views.accept_or_decline_request, name="accept_or_decline_request"),
     path('<int:user_id>/tutor_student_list/', views.tutor_student_list, name="tutor_student_list"),
-    path('<int:user_id>/watch_profile',views.watch_profile,name="watch_profile"),
+    path('<int:user_id>/watch_profile/',views.watch_profile,name="watch_profile"),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         views.account_activate, name='activate'),
     url(r'^password_reset/$', PasswordResetView.as_view(), name='password_reset'),
@@ -38,4 +38,5 @@ urlpatterns = [  #link between function and url when user connect to url functio
     path('aboutus/', TemplateView.as_view(template_name="tinder/aboutus.html"), name='aboutus'),
     path('adddata/', views.add_school_data, name ='adddata'),
     path('<int:user_id>/edit_profile/', views.edit_profile, name="edit_profile"),
+    path('<int:user_id>/comment_manage/',views.comment_manage,name="comment_manage"),
 ]

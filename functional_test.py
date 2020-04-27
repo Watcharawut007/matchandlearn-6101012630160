@@ -394,47 +394,66 @@ class signup(unittest.TestCase):
         time.sleep(1)
 
         # She is invited to enter an information
-        #username
+        # She enters username and she notices the username label
+        username_label = self.browser.find_element_by_id('Username_label').text
+        self.assertEqual('Username',username_label)
         username_box = self.browser.find_element_by_id('username_id')
         username_box.send_keys('Tiffany')
         time.sleep(1)
 
-        #password
+        # She enters password and she notices the password label
+        Password_label = self.browser.find_element_by_id('Password_label').text
+        self.assertEqual('Password', Password_label)
         password_box = self.browser.find_element_by_id('password_id')
         password_box.send_keys('Tiffany_password456')
         time.sleep(1)
 
-        # password comfirm
+        # She enters password comfirm and she notices the password comfirm label
+        Password_Confirm_label = self.browser.find_element_by_id('Password Confirm_label').text
+        self.assertEqual('Password Confirm', Password_Confirm_label)
         password_comfirm_box =self.browser.find_element_by_id('password_confirm_id')
         password_comfirm_box.send_keys('Tiffany_password456')
         time.sleep(1)
 
-        # first name
+        # She enters her first name  and she notices the first name label
+        Firstname_label = self.browser.find_element_by_id('First name_label').text
+        self.assertEqual('First name', Firstname_label)
         firstname_box = self.browser.find_element_by_id('firstname_id')
         firstname_box.send_keys('Tiffany')
         time.sleep(1)
 
-        #lastname
+        # She enters her last name and she notices the last name label
+        Lastname_label = self.browser.find_element_by_id('Last name_label').text
+        self.assertEqual('Last name', Lastname_label)
         lastname_box = self.browser.find_element_by_id('lastname_id')
         lastname_box.send_keys('Warren')
         time.sleep(1)
 
-        # collage
+        # She enters her collage name and she notices the collage label
+        College_label = self.browser.find_element_by_id('College_label').text
+        self.assertEqual('College', College_label)
         collage_box = self.browser.find_element_by_id('college_id')
         collage_box.send_keys('Harvard')
         time.sleep(1)
 
-        #gender
+        # She enters her gender and she notices the gender label
+        gender_label = self.browser.find_element_by_id('gender_label').text
+        self.assertEqual('gender', gender_label)
         gender_select = self.browser.find_element_by_id('id_gender')
-        gender_select.send_keys('Female')
+        gender_select.send_keys('female')
         time.sleep(1)
 
-        #email
+
+        # She enters her email and she notices the email label
+        Email_label = self.browser.find_element_by_id('Email_label').text
+        self.assertEqual('Email', Email_label)
         email_box =self.browser.find_element_by_id('email_id')
         email_box.send_keys('tiffany456@hotmail.com')
         time.sleep(1)
 
-        #birthday
+        # She enters her birthday and she notices the birthday label
+        birthday_label = self.browser.find_element_by_id('birthday_label').text
+        self.assertEqual('birthday', birthday_label)
         birthday_box = self.browser.find_element_by_id('birthday_id')
         birthday_box.send_keys('03/23/1989')
         time.sleep(1)
@@ -619,14 +638,8 @@ class remove_comment(unittest.TestCase):
         comment_delete_button = self.browser.find_element_by_id('watcharawut_delete_comment')
         comment_delete_button.click()
         time.sleep(2)
-        try:
-            # He try to find comment that he posted
-            comment_text = self.browser.find_element_by_id('watcharawut').text
-            self.assertEqual(comment_text, "Comment : kitsanapong is a good student")
-        except:
-            # He can not find it
-            print('can not find watcharawut comment')
-
+        amount_comment=len(self.browser.find_elements_by_id('watcharawut'))
+        self.assertEqual(0,amount_comment)
     def user_can_not_delete_another_user_comment(self):
         #kitsanapong login to Match and Learn website
         self.browser.get('http://127.0.0.1:8000/login')
@@ -671,11 +684,7 @@ class remove_comment(unittest.TestCase):
         # He saw Theeraphat comment that he thinks that it is lie and he try to delete it
         another_comment = self.browser.find_element_by_id('Theeraphat').text
         self.assertEqual(another_comment,"Comment : he is good teacher")
-        try:
-            # He try to find remove button in Theeraphat comment
-            another_comment_delete=self.browser.find_element_by_id('Theeraphat_delete_comment')
-        except:
-            print('can not find remove button in Theeraphat comment')
-        time.sleep(2)
+        remove_comment_button = len(self.browser.find_elements_by_id('Theeraphat_delete_comment'))
+        self.assertEqual(0, remove_comment_button)
 if __name__ == '__main__':
     unittest.main(warnings='ignore')

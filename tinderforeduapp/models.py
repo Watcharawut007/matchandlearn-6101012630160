@@ -52,11 +52,18 @@ class UserInfo(models.Model):#create user information model
     def denotify(self):#when someone cancel request amount of notify should be decrease
         self.match_request = self.match_request - 1
         self.save()
-    def check_birthday(self, date):#check birthday if today is the user birthday then update age
-        if (self.birthday.day <= date.day and self.birthday.month <= date.month) or self.birthday.month < date.month:#when user birthday passed in this year
+    def check_birthday(self, date):#check birthday if user watch his profile and another profile then update age
+        #self.birthday.day = the day of user birthday
+        #self.birthday.month = the month of user birthday
+        #self.birthday.year = the year of user birthday
+        #date = now
+
+        if (self.birthday.day <= date.day and self.birthday.month == date.month) or self.birthday.month < date.month:#when user birthday passed in this year
              self.age = str(date.year - self.birthday.year)
              self.save()
-        elif (self.birthday.day > date.day and self.birthday.month >= date.month) or self.birthday.month > date.month:#when user birthday has not passed in this year
+
+
+        elif (self.birthday.day > date.day and self.birthday.month == date.month) or self.birthday.month > date.month:#when user birthday has not passed in this year
              self.age = str(date.year - self.birthday.year-1)
              self.save()
 

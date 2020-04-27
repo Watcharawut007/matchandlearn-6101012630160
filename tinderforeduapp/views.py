@@ -357,36 +357,9 @@ def watch_profile(request,user_id):#this function is used when user watch anothe
     post = get_object_or_404(UserInfo, name=another_people.name)
     comments = post.comments.filter(active=True)
     picture = Profilepicture.objects.get(user=user_id)
-    new_comment = None #set default if this user do not comment yet
     people_comment={}
     for comment in comments:
         people_comment[comment]=UserInfo.objects.get(name=comment.name)
-    if request.method == 'POST':#if user comment
-        comment_form = CommentForm(data=request.POST)#get form
-        if comment_form.is_valid():#check form is valid
-
-            # Create Comment object but don't save to database yet
-            new_comment = comment_form.save(commit=False)
-            # Assign the current post to the comment
-            new_comment.post = post
-            new_comment.name = UserInfo.objects.get(name=request.user.username).name
-            # Save the comment to the database
-            new_comment.save()
-            people_comment[new_comment] = UserInfo.objects.get(name=request.user.username)
-            return render(request,'tinder/watch_profile.html',{'people_comment': people_comment,
-                                                   'pic': picture,
-
-                                                   'user_information': UserInfo.objects.get(name=request.user.username),
-                                                   'subject': UserInfo.objects.get(id=user_id).expertise.all(),
-                                                    'profile': UserInfo.objects.get(id=user_id)})
-
-    else:
-        comment_form = CommentForm()#display form
-    if request.POST.get('remove_comment'):#remove comment
-        if Comment.objects.get(id=request.POST['remove_comment']).name == UserInfo.objects.get(name=request.user.username).name:
-            delete_comment = Comment.objects.get(id=request.POST['remove_comment'])#get comment that should be remove
-            Comment.delete(delete_comment)#remove it
-        return HttpResponseRedirect(reverse('tinder:watch_profile', args=(another_people.id,)))
     if request.POST.get('unmatch'):#user want to unmatch (its like unfriend in facebook)
         Username = UserInfo.objects.get(name=request.user.username)#Collect this user data
         #remove match class
@@ -402,10 +375,30 @@ def watch_profile(request,user_id):#this function is used when user watch anothe
                    'user_information':UserInfo.objects.get(name=request.user.username),
                    'profile':UserInfo.objects.get(id=user_id),
                    'post': post, 'comments': comments,
-                   'new_comment': new_comment,
-                   'people_comment': people_comment,
-                   'comment_form': comment_form})#render watch proflie template
+                   'people_comment': people_comment})#render watch proflie template
+def comment_manage(request,user_id):#this function is used when user add or remove comment
+    another_people = UserInfo.objects.get(id=user_id)#get id user that you want to comment
+    another_people.check_birthday(datetime_now)  # check birthday user
+    if request.POST.get ('comment'):  # if user comment
+        comment_form = CommentForm(data=request.POST)  # get form
+        if comment_form.is_valid():  # check form is valid
 
+            # Create Comment object but don't save to database yet
+            new_comment = comment_form.save(commit=False)
+            # Assign the current post to the comment
+            new_comment.post = another_people
+            new_comment.name = UserInfo.objects.get(name=request.user.username).name
+            # Save the comment to the database
+            new_comment.save()
+            return HttpResponseRedirect(reverse('tinder:watch_profile', args=(another_people.id,)))
+
+    else:
+        comment_form = CommentForm()  # display form
+    if request.POST.get('remove_comment'):  # remove comment
+        if Comment.objects.get(id=request.POST['remove_comment']).name == UserInfo.objects.get(name=request.user.username).name:  # comment.name must equal username who posted this comment
+            delete_comment = Comment.objects.get(id=request.POST['remove_comment'])  # get comment that should be remove
+            Comment.delete(delete_comment)  # remove it
+        return HttpResponseRedirect(reverse('tinder:watch_profile', args=(another_people.id,)))
 def edit_profile(request,user_id):#this function is used when user edit his/her profile
     User = UserInfo.objects.get(name=request.user.username)#get user data
     picture = Profilepicture.objects.get(user= User)#get user Profile picture

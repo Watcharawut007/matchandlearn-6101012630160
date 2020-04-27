@@ -26,19 +26,19 @@
         }
 
         .form-signin {
-            width: 100%;
+            width: auto;
             max-width: 330px;
             padding: 15px;
             margin: auto;
         }
 
         .form-signin .form-control {
-            position: relative;
+            position: static;
             box-sizing: border-box;
             height: auto;
             padding: 10px;
             font-size: 16px;
-            width: 100%;
+            width: 330px;
         }
 
         .form-signin .form-control:focus {
@@ -87,19 +87,19 @@
         {% if field == form.gender %}
             <div class="row">
        <span style="white-space: pre-line"><div class="input-group" >
-   <label for="id_gender">gender:</label></div></span>
+   <label id = '{{ field.label }}_label' for="id_gender">gender</label></div></span>
             <select class="custom-select" name="gender" id="id_gender">
 
    <option selected disabled>Gender</option>
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-    <option value="Other">Other</option>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    <option value="other">Other</option>
    </select><br>
             </div>
         {% else %}
         <div class="row">
        <span style="white-space: pre-line"><div class="input-group" >
-         <label for="{{ field.id_for_label }}" >{{ field.label }}</label>{{ field }}
+         <label id='{{ field.label }}_label'for="{{ field.id_for_label }}" >{{ field.label }}</label>{{ field }}
       </div> </span>
      </div><p></p>
         {% endif %}
