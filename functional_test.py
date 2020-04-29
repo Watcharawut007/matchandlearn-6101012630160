@@ -382,12 +382,16 @@ class Chat(unittest.TestCase):
         )
         time.sleep(2)
 """
+
+
 class signup(unittest.TestCase):
+
     def setUp(self):
         self.browser = webdriver.Firefox()
 
     def tearDown(self):
         self.browser.quit()
+
     def can_sign_up(self):
         # tiffany wants to be a member so she clicks sign up link
         self.browser.get('http://localhost:8000/signup')
@@ -468,11 +472,13 @@ class signup(unittest.TestCase):
         signup_button.click()
         time.sleep(10)
 class check_birthday(unittest.TestCase):
+
     def setUp(self):
         self.browser = webdriver.Firefox()
 
     def tearDown(self):
         self.browser.quit()
+
     def user_check_his_age_and_another_user(self):
         if datetime.now().year == 2020:
             self.browser.get('http://127.0.0.1:8000/login') #user go to login page
@@ -529,6 +535,7 @@ class check_birthday(unittest.TestCase):
             birthday_user = self.browser.find_element_by_id('birthday_id').text
             self.assertIn(birthday_user, 'birthday: April 25, 1989')
             time.sleep(2)
+
 
     def  user_check_his_age_and_another_user_when_1_year_past(self):
         if  datetime.now().year == 2021:
@@ -593,7 +600,7 @@ class remove_comment(unittest.TestCase):
 
     def tearDown(self):
         self.browser.quit()
-    def test_user_can_comment_to_another_user_who_matched_with_him_and_can_delete_it(self):
+    def user_can_comment_to_another_user_who_matched_with_him_and_can_delete_it(self):
         # watcharawut login to Match and Learn website
         self.browser.get('http://127.0.0.1:8000/login')
         username_box = self.browser.find_element_by_name('username')  # user see the username field
@@ -644,7 +651,7 @@ class remove_comment(unittest.TestCase):
 
         #amount comment equal 0
         self.assertEqual(0,amount_comment)
-    def test_user_can_not_delete_another_user_comment(self):
+    def user_can_not_delete_another_user_comment(self):
         #kitsanapong login to Match and Learn website
         self.browser.get('http://127.0.0.1:8000/login')
         username_box = self.browser.find_element_by_name('username')  # user see the username field
@@ -694,5 +701,7 @@ class remove_comment(unittest.TestCase):
 
         #He can not find
         self.assertEqual(0, remove_comment_button)
+
+
 if __name__ == '__main__':
     unittest.main(warnings='ignore')

@@ -13,7 +13,7 @@ class birthday_function_Test(TestCase):
     def test_URL_mapping_to_homepage(self):
         found = resolve('/')
         self.assertEqual(found.func, home_page)
-    def test_user_look_at_his_age_and_another_user(self):
+    def user_look_at_his_age_and_another_user(self):
         views.datetime_now = date(2020, 4, 1) #today is 1/4/2020
         # 2 users is signin
         watcharawut = User.objects.create_user('watcharawut009','hiruma157@hotmail.com','tongu20068')
@@ -53,7 +53,7 @@ class birthday_function_Test(TestCase):
         watch_another_profile = self.client.post('/'+str(kitsanapong_user.id)+'/profile/')
         self.assertContains(watch_another_profile,'age: 30')
 
-    def test_user_look_at_his_age_and_another_user_when_1_year_pass(self):
+    def user_look_at_his_age_and_another_user_when_1_year_pass(self):
         views.datetime_now = date(2021, 4, 1)  # today is 1/4/2020
         # 2 users is signin
         watcharawut = User.objects.create_user('watcharawut009', 'hiruma157@hotmail.com', 'tongu20068')
@@ -94,7 +94,7 @@ class birthday_function_Test(TestCase):
         watch_another_profile = self.client.post('/' + str(kitsanapong_user.id) + '/profile/')
         self.assertContains(watch_another_profile, 'age: 31')
 
-    def test_user_can_comment_to_another_user_who_matched_with_him_and_can_delete_it(self):
+    def user_can_comment_to_another_user_who_matched_with_him_and_can_delete_it(self):
         # 2 users is signin
         watcharawut = User.objects.create_user('watcharawut009', 'hiruma157@hotmail.com', 'tongu20068')
         kitsanapong = User.objects.create_user('watcharawut007', 'hiruma158@hotmail.com', 'tongu4590')
@@ -147,3 +147,51 @@ class birthday_function_Test(TestCase):
         self.assertNotContains(remove_comment_kitsanapong_profile,'he is a good teacher')
         comment_detect =  Comment.objects.filter(post=kitsanapong_user,name=watcharawut_user.name,comment='he is a good teacher').exists()
         print('after delete comment,comment still exists=', comment_detect)
+
+
+
+
+class user_is_authenticated(TestCase):
+
+    def test_when_user_do_not_login(self):
+        watcharawut = User.objects.create_user('watcharawut009', 'hiruma157@hotmail.com', 'tongu20068')
+        kitsanapong = User.objects.create_user('watcharawut007', 'hiruma158@hotmail.com', 'tongu4590')
+        birthday1 = date(2000, 4, 24)  # the watcharawut birthday
+        birthday2 = date(1989, 4, 25)  # the kitsanapong birthday
+
+        # his name is watcharawut his age is 19 and expertise subject is english
+        watcharawut_user = UserInfo.objects.create(name='watcharawut009', firstname='Watcharawut', lastname='Pornsawat',
+                                                   age='19', school='kmutnb', birthday=birthday1)
+        subject_object1 = Subject.objects.create(subject_name='english', keyword_subject='english')
+        watcharawut_user.expertise.add(subject_object1)
+
+        # load profile picture watcharawut(this first time that he use this website profile picture is default.png)
+        picture1 = Profilepicture.objects.create(user=watcharawut_user)
+
+        # his name is kitsanapong his age is 30 and expertise subject is math2
+        kitsanapong_user = UserInfo.objects.create(name='watcharawut007', firstname='Kitsanapong', lastname='rodjing',
+                                                   age='30', school='kmutnb', birthday=birthday2)
+        subject_object2 = Subject.objects.create(subject_name='Math2', keyword_subject='math2')
+        kitsanapong_user.expertise.add(subject_object2)
+
+        # anonymous people who does not login try to connect in to this website with enter url
+
+        # anonymous people enter personal profile url for watch kitsanapong profile
+        respone_personal_profile=self.client.post(reverse('tinder:personal_profile',args=[kitsanapong_user.id]),follow=True)
+
+        # if he can not go in,templates will show a login template that have a link to sign up
+        self.assertContains(respone_personal_profile,'New to Match and Learn? Sign up now!')
+
+        # anonymous people enter watch profile url for watch to kitsanapong profile
+        respone_watch_profile = self.client.post(reverse('tinder:watch_profile', args=[kitsanapong_user.id]),
+                                                    follow=True)
+
+        # if he can not go in,templates will show a login template that have a link to sign up
+        self.assertContains(respone_watch_profile, 'New to Match and Learn? Sign up now!')
+
+        # anonymous people enter watch  url for watch people that kitsanapong matched
+        respone_tutor_student_lists = self.client.post(reverse('tinder:tutor_student_list', args=[kitsanapong_user.id]),
+                                                    follow=True)
+
+        # if he can not go in,templates will show a login template that have a link to sign up
+        self.assertContains(respone_tutor_student_lists, 'New to Match and Learn? Sign up now!')

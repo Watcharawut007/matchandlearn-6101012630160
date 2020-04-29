@@ -25,6 +25,8 @@ def home(request):#this function is used when user get in home page
         return HttpResponseRedirect('/login')
     return render(request, 'tinder/home.html')
 
+
+
 def signup(request):#this function is used when user signup
     if request.method == "POST":
         form = SignUpForm(request.POST)
@@ -73,6 +75,8 @@ def signup(request):#this function is used when user signup
         form = SignUpForm()
     return render(request, 'tinder/signup.html', {'form': form})#render Signup form
 
+
+
 def account_activate(request, uidb64, token, backend='django.contrib.auth.backends.ModelBackend'): #this function is used for confirm your signup in email
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
@@ -89,15 +93,17 @@ def account_activate(request, uidb64, token, backend='django.contrib.auth.backen
     else:
         return HttpResponse('''Activation link is invalid! <META HTTP-EQUIV="Refresh" CONTENT="5;URL=/login">''')
 
+
+
 def personal_profile(request, user_id):#this function is used to watch personal profile
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/login')
     User = UserInfo.objects.get(name=request.user.username)#get a data user to display on browser
     profile_picture = Profilepicture.objects.get(user=User)#get a profile picture
     User.check_birthday(datetime_now)#check birthday user
     all_expertise_subject = UserInfo.objects.get(name=request.user.username).expertise.all()
     comments = User.comments.filter(active=True)
     people_comment = {}
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect('/login')
     for comment in comments:
         people_comment[comment] = UserInfo.objects.get(name=comment.name)
     if request.POST.get('subject_good'):#get request when user add good subject
@@ -119,12 +125,17 @@ def personal_profile(request, user_id):#this function is used to watch personal 
                    'pic':profile_picture,
                    'user_infomation': User,
                    'subject': all_expertise_subject})
-def successlogin(request):#this function is used to go to home templates when user can login
 
+
+
+def successlogin(request):#this function is used to go to home templates when user can login
     if request.POST.get('login'):
         return render(request,
                       'tinder/home.html',
                       {'user_infomation': request.user.username })#render home templates
+
+
+
 def another_profile(request,user_id):#this function is used to watch another user profile
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/login')
@@ -156,7 +167,10 @@ def another_profile(request,user_id):#this function is used to watch another use
                    "chat_room_name":Url_chat})
 
 
+
 def add_school_data(request):#check if users signup with facebook then they do not have school data
+    if not request.user.is_authenticated:#check if user do not login
+        return HttpResponseRedirect('/login')
     if request.method == "POST":
         form = AdditionalForm(request.POST)
         if form.is_valid():#check form is valid so add school name in userinformation model
@@ -170,14 +184,15 @@ def add_school_data(request):#check if users signup with facebook then they do n
         form = AdditionalForm()
     return render(request, 'tinder/adddata.html', {'form': form})
 
+
+
 def home_page(request):#this function contain all fucntion in home template
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/login')
     """search here"""
     search_tutor = [] #this variable used to collect all tutor that user can find
     sendPOST = 0 # check if
-
-    if (UserInfo.objects.filter(name=request.user.username).count() == 0):#check if user do not login
+    if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
     if UserInfo.objects.get(name=request.user.username).school == '':
         return HttpResponseRedirect('/adddata')
@@ -221,6 +236,9 @@ def home_page(request):#this function contain all fucntion in home template
                     "search_size": len(search_tutor),
                     'sendPOST':sendPOST,
                     'all_request':UserInfo.objects.get(name=request.user.username).request.all()})#render home template
+
+
+
 def select_delete_expertise_subject(request, user_id):#this function is used when user remove good subject
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/login')
@@ -236,6 +254,9 @@ def select_delete_expertise_subject(request, user_id):#this function is used whe
             select.delete()
 
     return HttpResponseRedirect(reverse('tinder:personal_profile', args=(User.id,)))#redirect to personal_profile.html template
+
+
+
 def request_list(request, user_id):#show all users that what to match with this user
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/login')
@@ -249,6 +270,9 @@ def request_list(request, user_id):#show all users that what to match with this 
                   {'user_infomation':UserInfo.objects.get(name=request.user.username),
                    'match_request':UserInfo.objects.get(name=request.user.username).request.all(),
                    'list_match':list_match})#render match request template
+
+
+
 def send_request(request, user_id):#this function is used when user want to send request to another user
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/login')
@@ -289,6 +313,9 @@ def send_request(request, user_id):#this function is used when user want to send
                            'check': 1,  # this user already send request to him/her
                            'profile':UserInfo.objects.get(id=user_id),
                            'chat_room_name':Url_chat})#render profile template
+
+
+
 def unsend_request(request, user_id): #this function is used when user want to unmatched to another user
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/login')
@@ -322,6 +349,9 @@ def unsend_request(request, user_id): #this function is used when user want to u
                                                    'subject': UserInfo.objects.get(id=user_id).expertise.all(),
                                                     'profile': UserInfo.objects.get(id=user_id),
                                                    'chat_room_name':Url_chat})#render profile template
+
+
+
 def accept_or_decline_request(request, user_id):#this function is used when you are accept or decline to people that request to you
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/login')
@@ -356,6 +386,9 @@ def accept_or_decline_request(request, user_id):#this function is used when you 
                    'profile': UserInfo.objects.get(id=user_id),
                    'subject': UserInfo.objects.get(id=user_id).expertise.all(),
                    'request': Username.request.get(who_send=another_people.name)})#render template
+
+
+
 def tutor_student_list(request, user_id):#this function is used to display tutor or student list
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/login')
@@ -374,6 +407,9 @@ def tutor_student_list(request, user_id):#this function is used to display tutor
                   {"user_infomation":UserInfo.objects.get(name=request.user.username),
                    'tutor_list':UserInfo.objects.get(id=user_id).request.all(),
                    'list_match':list_match})#render tutor student template
+
+
+
 def watch_profile(request,user_id):#this function is used when user watch another profile
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/login')
@@ -402,7 +438,12 @@ def watch_profile(request,user_id):#this function is used when user watch anothe
                    'profile':UserInfo.objects.get(id=user_id),
                    'post': post, 'comments': comments,
                    'people_comment': people_comment})#render watch proflie template
+
+
+
 def create_comment(request,user_id):#this function is used when user add comment
+    if not request.user.is_authenticated:#check if user do not login
+        return HttpResponseRedirect('/login')
     user=UserInfo.objects.get(name=request.user.username)#get information for this user
     another_people = UserInfo.objects.get(id=user_id)#get id user that you want to comment
     if request.POST.get ('comment'):  # if user comment
@@ -419,7 +460,12 @@ def create_comment(request,user_id):#this function is used when user add comment
     else:
         comment_form = CommentForm()
     return HttpResponseRedirect(reverse('tinder:watch_profile', args=(another_people.id,)))
+
+
+
 def delete_comment(request,user_id):#this function is used when user remove comment
+    if not request.user.is_authenticated:#check if user do not login
+        return HttpResponseRedirect('/login')
     user = UserInfo.objects.get(name=request.user.username)  # get information for this user
     another_people = UserInfo.objects.get(id=user_id)  # get id user that you want to comment
     if request.POST.get(user.firstname+'_delete_comment'):  # remove comment
@@ -427,6 +473,9 @@ def delete_comment(request,user_id):#this function is used when user remove comm
             delete_comment = Comment.objects.get(id=request.POST[user.firstname+'_delete_comment'])  # get comment that should be remove
             Comment.delete(delete_comment)  # remove it
     return HttpResponseRedirect(reverse('tinder:watch_profile', args=(another_people.id,)))
+
+
+
 def edit_profile(request,user_id):#this function is used when user edit his/her profile
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/login')
@@ -444,11 +493,17 @@ def edit_profile(request,user_id):#this function is used when user edit his/her 
         form = Editprofileform(instance=User)
         formpic = profilepicture(instance=picture)
     return render(request,'tinder/edit_profile.html',{"pic":picture,'form':form,'formpic':formpic})
+
+
+
 #convert string function to easily search
 def change_subject_to_keyword(keyword):
     keyword = keyword.lower()
     keyword = keyword.replace(' ', '')
     return keyword
+
+
+
 def change_school_to_keyword(keyword):
     keyword = keyword.upper()
     keyword = keyword.replace(' ','')
