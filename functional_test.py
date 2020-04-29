@@ -638,9 +638,13 @@ class remove_comment(unittest.TestCase):
         comment_delete_button = self.browser.find_element_by_id('watcharawut_delete_comment')
         comment_delete_button.click()
         time.sleep(2)
+
+        #he try to count amount comment that he saw in the kitsanapong profile
         amount_comment=len(self.browser.find_elements_by_id('watcharawut'))
+
+        #amount comment equal 0
         self.assertEqual(0,amount_comment)
-    def user_can_not_delete_another_user_comment(self):
+    def test_user_can_not_delete_another_user_comment(self):
         #kitsanapong login to Match and Learn website
         self.browser.get('http://127.0.0.1:8000/login')
         username_box = self.browser.find_element_by_name('username')  # user see the username field
@@ -684,7 +688,11 @@ class remove_comment(unittest.TestCase):
         # He saw Theeraphat comment that he thinks that it is lie and he try to delete it
         another_comment = self.browser.find_element_by_id('Theeraphat').text
         self.assertEqual(another_comment,"Comment : he is good teacher")
+
+        #He try to find remove button on the theeraphat comment
         remove_comment_button = len(self.browser.find_elements_by_id('Theeraphat_delete_comment'))
+
+        #He can not find
         self.assertEqual(0, remove_comment_button)
 if __name__ == '__main__':
     unittest.main(warnings='ignore')

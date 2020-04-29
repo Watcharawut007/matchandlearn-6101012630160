@@ -1,6 +1,11 @@
 <!DOCTYPE html> {% load static %}
 <html>
+
 <head>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <style>
 ul {
   list-style-type: none;
@@ -30,6 +35,16 @@ li a:hover:not(.active) {
 .active {
   background-color: #4CAF50;
 }
+.contain{
+    width: auto;
+    padding: 10px ;
+    border-style: solid;
+    border-color: rgba(144, 178, 202, 0.65);
+    margin: 0;
+    height: 230px;
+
+}
+
 .notification {
       background-color: #555;
       color: white;
@@ -56,6 +71,7 @@ li a:hover:not(.active) {
 bg{
     background-position:center;
 }
+
 </style>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -151,13 +167,11 @@ bg{
       <h2>Leave comment</h2>
     </div>
     <div class="row">
-    <div class="col-md-8 card mb-4  mt-3 left  top">
-      <div class="card-body">
-        <h1>{% block title %} {{ post.title }} {% endblock title %}</h1>
-      </div>
+    <div class="col-md-8  mt-3 left  top">
+
     </div>
-    <div class="col-md-8 card mb-4  mt-3 ">
-        <form method="post" style="margin-top: 1.3em;" action="{% url 'tinder:comment_manage' profile.id %}">
+    <div class="col-md-8  mt-3 ">
+        <form method="post" style="margin-top: 1.3em;" action="{% url 'tinder:create_comment' profile.id %}">
           <p><label for="id_comment">Comment:</label> <input class="form-control" type="text" name="comment" maxlength="500" required id="id_comment"></p>
             <p><label for="id_star">Choose your score:</label> <select class="form-control" name="star" id="id_star">
             <option value="1">1</option>
@@ -167,7 +181,7 @@ bg{
                 <option value="5">5</option>
             </select></p>
           {% csrf_token %}
-          <button id='comment_submit_id' type="submit" class="btn btn-primary">Submit</button>
+          <button id='comment_submit_id' type="submit" class="btn btn-primary left">Submit</button>
         </form>
       </div>
     </div>
@@ -182,10 +196,12 @@ bg{
                 <h2>{{ comments.count }} comments</h2>
 
         {% for key,value in people_comment.items %}
+             <section class="mx-2 mb-4 pb-3">
+
+             <div class="card-body">
               {% if key.name  ==  user_information.name %}
         <div class="comments" style="padding: 10px;">
           <p class="font-weight-bold">
-
             {{ value.firstname }}
             <span class=" text-muted font-weight-normal">
               {{ key.created_on }}
@@ -193,11 +209,18 @@ bg{
           </p>
                   <p id ={{ value.firstname }}>Comment : {{ key.comment }}</p>
            Star : {{ key.star }}
-        <form  method="post" action="{% url 'tinder:comment_manage' profile.id %}">
+            </div>
+        <form  method="post" action="{% url 'tinder:delete_comment' profile.id %}">
                         {% csrf_token %}
-                        <button name = '{{ value.firstname }}_delete_comment' id='{{ value.firstname }}_delete_comment' class="btn btn-primary"  name="remove_comment" value="{{ key.id }}" >remove</button>
+                        <button name ='{{ value.firstname }}_delete_comment' id='{{ value.firstname }}_delete_comment' class="btn btn-primary"  name="remove_comment" value="{{ key.id }}" >remove</button>
                     </form>
+        </div>
+
+                  </section>
             {% else %}
+                  <section class="mx-2 mb-4 pb-3">
+
+                    <div class="card-body">
         <div class="comments" style="padding: 10px;">
           <p class="font-weight-bold">
             {{ value.firstname }}
@@ -207,11 +230,17 @@ bg{
           </p>
            <p id ={{ value.firstname }}>Comment : {{ key.comment }}</p>
            Star : {{ key.star }}
+
         </div>
+                  </div>
+                  </section>
+
+                  <br>
             {% endif %}
         {% endfor %}
             </div>
         </div>
+
     <!--.container-fluid-->
 </section>
 <!--.section-contact-->
