@@ -9,6 +9,7 @@ from datetime import datetime
 class Subject(models.Model): #create subject model
     subject_name = models.TextField(max_length=200, blank=True) #Collect a subject data when user add it
     keyword_subject = models.TextField(max_length=200, blank=True) #Collect a subject_name value in lower case for easily to search
+
     def __str__(self):
         return self.subject_name
 
@@ -17,13 +18,18 @@ class Requestmodel(models.Model):#create request model
     who_send = models.TextField(max_length=200, blank=True)#Collect a url_room_name who sent a request
     request_message = models.TextField(max_length=600,blank=True)#Collect about me data
     who_recive = models.TextField(max_length=200, blank=True)#Collect a url_room_name who will recive a request
+
     def __str__(self):
         return self.who_send
+
+
 class Matchmodel(models.Model):#creat match model
     myself = models.TextField(max_length=200, blank=True) #Collect a url_room_name user
     another_user = models.TextField(max_length=200, blank=True)#Collect a url_room_name who matched with this user
+
     def __str__(self):
         return self.myself
+
 
 class UserInfo(models.Model):#create user information model
     name = models.TextField(max_length=200, blank=True)#Collect a username data
@@ -40,11 +46,14 @@ class UserInfo(models.Model):#create user information model
     match_request = models.IntegerField(default=0)#Collect amount of notify when you have a request from someone
     message_list = models.IntegerField(default=0)#Collect amount of notify when you have a message from someone
     birthday = models.DateTimeField(blank=True)#Collect birthday
+
     def __str__(self):
         return self.name
+
     def read(self):#its mean when you go to request list then amount of notify will be zero
         self.match_request = 0
         self.save()
+
     def notify(self):#when you have request amount of notify should be increase
         self.match_request = self.match_request + 1
         self.save()
@@ -52,6 +61,7 @@ class UserInfo(models.Model):#create user information model
     def denotify(self):#when someone cancel request amount of notify should be decrease
         self.match_request = self.match_request - 1
         self.save()
+
     def check_birthday(self, date):#check birthday if user watch his profile and another profile then update age
         #self.birthday.day = the day of user birthday
         #self.birthday.month = the month of user birthday
@@ -82,6 +92,7 @@ class Comment(models.Model):#create comment model
     def __str__(self):
         return 'Comment to {} by {}'.format(self.post, self.name)
 
+
 class Profile(models.Model):#create a profile model,this model is same Userinfo model,this model is create for when user register then this model keep a information
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100, blank=True)
@@ -91,8 +102,11 @@ class Profile(models.Model):#create a profile model,this model is same Userinfo 
     age = models.TextField(max_length=10, blank=True)
     bio = models.TextField()
     birthday = models.DateTimeField(default=datetime.now,blank=True)
+
     def __str__(self):
         return self.user.username
+
+
 class Profilepicture(models.Model):#this model create for Profile picture
     user = models.OneToOneField(UserInfo, on_delete=models.CASCADE)#Collect a first url_room_name
     images = models.ImageField(default='default.png',upload_to='media')#Collect a picture

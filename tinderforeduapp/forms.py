@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.forms import DateInput
+
 from .models import *
 
 
@@ -19,10 +21,10 @@ class SignUpForm(UserCreationForm): #form sign up
     gender = forms.CharField(label='gender',widget=forms.Select(attrs={'class':'custom-select','placeholder':'select your gender','id':'id_gender'}))
     email = forms.EmailField(max_length=150,label='Email',widget=forms.EmailInput(attrs={'class':'form-control','placeholder':'example@gmail.com','id':'email_id','type':'Email'}))
     birthday = forms.DateTimeField(label='birthday',widget=forms.DateTimeInput(attrs={'class':'form-control','placeholder':'mm/dd/year','id':'birthday_id'}))
+
     class Meta:
         model = User #link data in field to keep in user model
         fields=['username','password1','password2','first_name','last_name','college','gender','email','birthday']
-
 
 
 class CommentForm(forms.ModelForm): #comment form
@@ -39,6 +41,7 @@ class CommentForm(forms.ModelForm): #comment form
         model = Comment #link data that get from star to comment model
         fields = ('comment','star',)
 
+
 class AdditionalForm(forms.ModelForm):
     Gender = [
         ('Male', 'Male'),
@@ -48,15 +51,20 @@ class AdditionalForm(forms.ModelForm):
     #age = forms.CharField(max_length=10)
     school = forms.CharField(max_length=100)
     #gender = forms.CharField(label="Choose your gender", widget=forms.Select(choices=Gender))
+
     class Meta:
         model = UserInfo
         fields = ('school',)
+
+
 class Editprofileform(forms.ModelForm):#edit profile form
 
-
+    birthday = forms.DateTimeField(label='birthday', widget=forms.DateTimeInput(
+        attrs={'class': 'form-control', 'placeholder': 'mm/dd/year', 'id': 'birthday_id'}))
     class Meta:
         model = UserInfo #link data in form to userintfo model
-        fields = ['firstname', 'lastname', 'age', 'school', 'gender','birthday' ]
+        fields = ['firstname', 'lastname', 'age', 'school', 'gender','birthday']
+
 
 class profilepicture(forms.ModelForm): #change profile picture form
     class Meta:

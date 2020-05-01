@@ -79,8 +79,12 @@
     <img src="{{ pic.images.url }}" >
     {{ formpic }}
     {% for field in form %}
-      {% if forloop.counter0 != 4 %}
+        {% if form.birthday == field %}
+            <input class="form-control" required id="{{ field.id_for_label }}"  name="{{ field.html_name }}" type="text" value="{{ field.form.initial.birthday.month }}/{{ field.form.initial.birthday.day }}/{{ field.form.initial.birthday.year }}"/><p></p>
+      {% elif forloop.counter0 != 4 %}
       <input class="form-control" required id="{{ field.id_for_label }}" placeholder="{{ field.html_name|title }}" name="{{ field.html_name }}" type="text" value="{{ field.value }}"/><p></p>
+
+
     {% else %}
       <select class="custom-select" name="gender" id="id_gender" onselect="{{ form.gender.value }}">
     <option value="Male">Male</option>

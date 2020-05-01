@@ -82,14 +82,14 @@ bg{
 </head>
 <ul>
   <li><a href="/">Home</a></li>
-  <li><a name = "Students and Tutor list" href="{% url 'tinder:tutor_student_list' user_infomation.id%}">Students and Tutor list</a></li>
-    <li ><a name = "Match request" href="{% url 'tinder:request_list' user_infomation.id %}" {% if user_infomation.match_request > 0 %}class="notification"{% endif %}><span>Student request</span>{% if user_infomation.match_request > 0 %}<span name= "value_notificate" class="badge">{{ user_infomation.match_request }}</span>{% endif %}</a></li>
+  <li><a name = "Students and Tutor list" href="{% url 'tinder:tutor_student_list'%}">Students and Tutor list</a></li>
+    <li ><a name = "Match request" href="{% url 'tinder:request_list'%}" {% if user_infomation.match_request > 0 %}class="notification"{% endif %}><span>Student request</span>{% if user_infomation.match_request > 0 %}<span name= "value_notificate" class="badge">{{ user_infomation.match_request }}</span>{% endif %}</a></li>
     <li><a name = "About us" href="{% url 'tinder:aboutus' %}">About</a></li>
     <li><a name = "Chat" href="">Chat</a></li>
     <li><a name = "Privacy Policy" href="{% url 'tinder:privacy' %}">Privacy Policy</a></li>
     <li style="float:right"><a href="{% url 'tinder:logout' %}">Logout</a></li>
     <li style="float:right"><a href="{% url 'tinder:faq' %}">Help</a></li>
-    <li style="float:right"><a href="/{{ user_infomation.id }}/personal_profile">Profile : {{ user_infomation.firstname }}</a></li>
+    <li style="float:right"><a href="/personal_profile">Profile : {{ user_infomation.firstname }}</a></li>
 </ul>
 <body id="page-top" data-spy="scroll" data-target=".navbar">
 <div id="main-wrapper">
@@ -139,8 +139,8 @@ bg{
                 <div class="expertise-item">
                     <form action="{% url 'tinder:accept_or_decline_request' profile.id %}" method="post">
                         {% csrf_token %}
-                        <button class="btn btn-primary" name="accept" value="accept" >accept</button>
-                        <button class="btn btn-primary" name="decline" value="decline" >decline</button>
+                        <button class="btn btn-primary" id = "accept_button_id" name="accept" value="accept" >accept</button>
+                        <button class="btn btn-primary" id = "decline_button_id" name="decline" value="decline" >decline</button>
                     </form>
                 </div>
             </div>

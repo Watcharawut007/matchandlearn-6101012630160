@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -20,8 +22,9 @@ from django.db import close_old_connections
 datetime_now = datetime.now()#collect a current time
 
 
+
 def home(request):#this function is used when user get in home page
-    if not request.user.is_authenticated:
+    if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
     return render(request, 'tinder/home.html')
 
@@ -95,8 +98,8 @@ def account_activate(request, uidb64, token, backend='django.contrib.auth.backen
 
 
 
-def personal_profile(request, user_id):#this function is used to watch personal profile
-    if not request.user.is_authenticated:
+def personal_profile(request):#this function is used to watch personal profile
+    if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
     User = UserInfo.objects.get(name=request.user.username)#get a data user to display on browser
     profile_picture = Profilepicture.objects.get(user=User)#get a profile picture
@@ -112,13 +115,8 @@ def personal_profile(request, user_id):#this function is used to watch personal 
         User=UserInfo.objects.get(name=request.user.username)
         User.expertise.add(subject)#add good subject to user model
         User.save()
-        #render a personal_profile.html templates
-        return render(request,
-                      'tinder/personal_profile.html',
-                      {'comments': people_comment,
-                       'pic':profile_picture,
-                       'user_infomation': User,
-                       'subject': all_expertise_subject})
+        #redirect to personal_profile.html templates
+        return HttpResponseRedirect(reverse('tinder:personal_profile'))
     # render a personal_profile.html templates
     return render(request, 'tinder/personal_profile.html',
                   {'comments': people_comment,
@@ -187,35 +185,40 @@ def add_school_data(request):#check if users signup with facebook then they do n
 
 
 def home_page(request):#this function contain all fucntion in home template
-    if not request.user.is_authenticated:
+
+    if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
     """search here"""
     search_tutor = [] #this variable used to collect all tutor that user can find
     sendPOST = 0 # check if
+
     if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
+
     if UserInfo.objects.get(name=request.user.username).school == '':
         return HttpResponseRedirect('/adddata')
+
     User = UserInfo.objects.get(name=request.user.username)
     User.check_birthday(datetime_now)#check birthday user
-    if request.POST.get('tutor_find'):#check user is find a tutor
+
+    if request.GET.get('tutor_find'):#check user is find a tutor
         sendPOST = 1
-        what_sub = change_subject_to_keyword(request.POST['tutor_find'])#convert string to easily search
+        what_sub = change_subject_to_keyword(request.GET['tutor_find'])#convert string to easily search
         #user is use a filter to search a tutor
         result_search = {}
-        if request.POST['gender'] != "" and request.POST['school'] !=" ":#user is use filter only subject filter
+        if request.GET['gender'] != "" and request.GET['school'] !=" ":#user is use filter only subject filter
             search_tutor = UserInfo.objects.filter(expertise__keyword_subject=what_sub,
-                                                   school_keyword=change_school_to_keyword(request.POST['school']),
-                                                   gender=request.POST['gender'])#use method filter to find a tutor
+                                                   school_keyword=change_school_to_keyword(request.GET['school']),
+                                                   gender=request.GET['gender'])#use method filter to find a tutor
             for key in search_tutor:
                 result_search[key] = Profilepicture.objects.get(user=key)#get a information that user can find
-        elif request.POST['gender'] != "":#user is using gender filter
-            search_tutor = UserInfo.objects.filter(expertise__keyword_subject=what_sub, gender=request.POST['gender'])
+        elif request.GET['gender'] != "":#user is using gender filter
+            search_tutor = UserInfo.objects.filter(expertise__keyword_subject=what_sub, gender=request.GET['gender'])
             for key in search_tutor:
                 result_search[key] = Profilepicture.objects.get(user=key)
-        elif request.POST['school'] != "":#user is using school filter
+        elif request.GET['school'] != "":#user is using school filter
             search_tutor = UserInfo.objects.filter(expertise__keyword_subject=what_sub,
-                                                   school_keyword=change_school_to_keyword(request.POST['school']))
+                                                   school_keyword=change_school_to_keyword(request.GET['school']))
             for key in search_tutor:
                 result_search[key] = Profilepicture.objects.get(user=key)
         else:#user is using school filter and gender filter
@@ -228,7 +231,7 @@ def home_page(request):#this function contain all fucntion in home template
                        "search_result": search_tutor,
                        "search_size": len(search_tutor),
                        'sendPOST' : sendPOST,
-                       "what_sub": request.POST['tutor_find']})#render home template and list tutor that user can find
+                       "what_sub": request.GET['tutor_find']})#render home template and list tutor that user can find
 
     return render(request,
                   'tinder/home.html',
@@ -240,29 +243,35 @@ def home_page(request):#this function contain all fucntion in home template
 
 
 def select_delete_expertise_subject(request, user_id):#this function is used when user remove good subject
-    if not request.user.is_authenticated:
+
+    if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
     User = UserInfo.objects.get(id=user_id)#get information user
     modelget = get_object_or_404(UserInfo, id=user_id)#get information user
     select_subject = request.POST.getlist("subject_list")#get all subject that user want to delete
     #delete it all
+
     if len(select_subject) == 0:#check if user just press the button but user did not select a good subject
         pass
+
     else :#delete
         for i in select_subject:
-            select = modelget.expertise.get(pk=i)
+            select = modelget.expertise.get(id=i)
+            User.expertise.remove(select)
             select.delete()
 
-    return HttpResponseRedirect(reverse('tinder:personal_profile', args=(User.id,)))#redirect to personal_profile.html template
+    return HttpResponseRedirect(reverse('tinder:personal_profile'))#redirect to personal_profile.html template
 
 
 
-def request_list(request, user_id):#show all users that what to match with this user
-    if not request.user.is_authenticated:
+def request_list(request):#show all users that what to match with this user
+
+    if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
     match_list_id  = UserInfo.objects.get(name=request.user.username).request.all()#get all users
     list_match = []#Collect all users for create a link to watch their profile
     UserInfo.objects.get(name=request.user.username).read()  # when user get in this page notify should be 0
+
     for i in match_list_id:
         list_match.append(UserInfo.objects.get(name=i.who_send))#get all users information
     return render(request,
@@ -274,7 +283,8 @@ def request_list(request, user_id):#show all users that what to match with this 
 
 
 def send_request(request, user_id):#this function is used when user want to send request to another user
-    if not request.user.is_authenticated:
+
+    if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
     #load all user data and another users data
     Username = UserInfo.objects.get(name=request.user.username)
@@ -287,15 +297,13 @@ def send_request(request, user_id):#this function is used when user want to send
     Url_list_sort = sorted(Url_list)
     Url_chat = Url_list_sort[0] + "_"+Url_list_sort[1]
     already_match = 0 #use to check if he do not match this variable = 0
+
     if request.method == "POST":
+
         if another_people.request.filter(who_send=Username.name,who_recive=another_people.name) or Username.request.filter(who_send=another_people.name,who_recive=Username.name) :#check if this user matched
             already_match=1
-            return render(request, 'tinder/profile.html',
-                          {'already_match': already_match, 'comments': comments, 'pic': picture,
-                           'user_infomation': UserInfo.objects.get(name=request.user.username),
-                           'subject': UserInfo.objects.get(id=user_id).expertise.all(),
-                           'profile': UserInfo.objects.get(id=user_id),
-                           'chat_room_name': Url_chat})
+            return HttpResponseRedirect(reverse('tinder:another_profile', args=[another_people.id]))
+
         else:
             user_name = Requestmodel.objects.create(who_send=Username.name,
                                                     request_message=request.POST['text_request'],
@@ -303,21 +311,13 @@ def send_request(request, user_id):#this function is used when user want to send
             another_people.request.add(user_name)#send request to that user
             UserInfo.objects.get(id=user_id).notify()#send notify
             UserInfo.objects.get(id=user_id).save()#save model
-            return render(request,
-                          'tinder/profile.html',
-                          {'already_match':already_match,
-                           'comments': comments,
-                           'pic': picture,
-                           'user_infomation': UserInfo.objects.get(name=request.user.username),
-                           'subject': UserInfo.objects.get(id=user_id).expertise.all(),
-                           'check': 1,  # this user already send request to him/her
-                           'profile':UserInfo.objects.get(id=user_id),
-                           'chat_room_name':Url_chat})#render profile template
+            return HttpResponseRedirect(reverse('tinder:another_profile', args=[another_people.id]))
 
 
 
 def unsend_request(request, user_id): #this function is used when user want to unmatched to another user
-    if not request.user.is_authenticated:
+
+    if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
     # load all user data and another users data
     Username = UserInfo.objects.get(name=request.user.username)
@@ -328,6 +328,7 @@ def unsend_request(request, user_id): #this function is used when user want to u
     Url_list = [Username.name, another_people.name]
     Url_list_sort = sorted(Url_list)
     Url_chat = Url_list_sort[0] + "_"+Url_list_sort[1]
+
     if request.POST.get('Unmatched'):#when user change his mind to not match this user
         # load all user data and another users data
         Username = UserInfo.objects.get(name=request.user.username)
@@ -337,12 +338,7 @@ def unsend_request(request, user_id): #this function is used when user want to u
         Requestmodel.delete(remove_match)#remove request model
         UserInfo.objects.get(id=user_id).denotify()#remove notify
         UserInfo.objects.get(id=user_id).save()#save db
-        return render(request,'tinder/profile.html',{'subject': UserInfo.objects.get(id=user_id).expertise.all(),
-                                                     'pic': picture,
-                                                     'user_infomation': UserInfo.objects.get(
-                                                         name=request.user.username),
-                                                       'profile': UserInfo.objects.get(id=user_id),
-                                                       'chat_room_name':Url_chat})#render profile template
+        return HttpResponseRedirect(reverse('tinder:another_profile',args=[another_people.id]))
     return render(request, 'tinder/profile.html', {'comments': comments,
                                                    'pic': picture,
                                                    'user_infomation': UserInfo.objects.get(name=request.user.username),
@@ -353,7 +349,8 @@ def unsend_request(request, user_id): #this function is used when user want to u
 
 
 def accept_or_decline_request(request, user_id):#this function is used when you are accept or decline to people that request to you
-    if not request.user.is_authenticated:
+
+    if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
     #contain user and another user data
     Username = UserInfo.objects.get(name=request.user.username)
@@ -364,6 +361,7 @@ def accept_or_decline_request(request, user_id):#this function is used when you 
     Url_list_sort = sorted(Url_list)
     comments = Comment.objects.filter(post=user_id)
     chat_room_name = Url_list_sort[0] + "_"+Url_list_sort[1]
+
     if request.POST.get('accept'):#if user accept this profile
         match_obj = Matchmodel.objects.create(another_user=another_people.name, myself=Username.name)#create match model
         Username.match.add(match_obj)#add model to this user
@@ -372,12 +370,13 @@ def accept_or_decline_request(request, user_id):#this function is used when you 
         Requestmodel.delete(request_obj)
         match_obj2 = Matchmodel.objects.create(another_user=Username.name, myself=another_people.name)#create match model to another user to easaily to display
         another_people.match.add(match_obj2)#add model to another user
-        return HttpResponseRedirect(reverse('tinder:request_list', args=(Username.id,)))#redirect match_request template
+        return HttpResponseRedirect(reverse('tinder:request_list'))#redirect match_request template
+
     if request.POST.get('decline'):#user do not accept
         request_obj = Username.request.get(who_send=another_people.name,who_recive=Username.name)#remove request model
         Username.request.remove(request_obj)
         Requestmodel.delete(request_obj)
-        return HttpResponseRedirect(reverse('tinder:request_list', args=(Username.id,)))#redirect match_request template
+        return HttpResponseRedirect(reverse('tinder:request_list'))#redirect match_request template
     return render(request,
                   'tinder/profile_accept_or_decline.html',
                   {'comments':comments, 'pic':picture,
@@ -389,9 +388,11 @@ def accept_or_decline_request(request, user_id):#this function is used when you 
 
 
 
-def tutor_student_list(request, user_id):#this function is used to display tutor or student list
-    if not request.user.is_authenticated:
+def tutor_student_list(request):#this function is used to display tutor or student list
+
+    if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
+
     match_list_id = UserInfo.objects.get(name=request.user.username).match.all()#get all people that match with user
     list_match = {}#keep in dict to display
 
@@ -405,13 +406,14 @@ def tutor_student_list(request, user_id):#this function is used to display tutor
         list_match[key]=value #let value be a url chat and key be a user model
     return render(request, 'tinder/tutor_students_list.html',
                   {"user_infomation":UserInfo.objects.get(name=request.user.username),
-                   'tutor_list':UserInfo.objects.get(id=user_id).request.all(),
+                   'tutor_list':UserInfo.objects.get(name=request.user.username).request.all(),
                    'list_match':list_match})#render tutor student template
 
 
 
 def watch_profile(request,user_id):#this function is used when user watch another profile
-    if not request.user.is_authenticated:
+
+    if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
     #contain user that he want to see
     another_people = UserInfo.objects.get(id=user_id)
@@ -420,8 +422,10 @@ def watch_profile(request,user_id):#this function is used when user watch anothe
     comments = post.comments.filter(active=True)
     picture = Profilepicture.objects.get(user=user_id)
     people_comment={}
+
     for comment in comments:
         people_comment[comment]=UserInfo.objects.get(name=comment.name)
+
     if request.POST.get('unmatch'):#user want to unmatch (its like unfriend in facebook)
         Username = UserInfo.objects.get(name=request.user.username)#Collect this user data
         #remove match class
@@ -431,7 +435,7 @@ def watch_profile(request,user_id):#this function is used when user watch anothe
         unmatch_obj2= another_people.match.get(another_user=Username.name, myself=another_people.name)
         another_people.match.remove(unmatch_obj2)
         Matchmodel.delete(unmatch_obj2)
-        return HttpResponseRedirect(reverse('tinder:tutor_student_list', args=(Username.id,)))#redirect to tutor_student_list
+        return HttpResponseRedirect(reverse('tinder:tutor_student_list'))#redirect to tutor_student_list
     return render(request,'tinder/watch_profile.html',
                   {'pic':picture,
                    'user_information':UserInfo.objects.get(name=request.user.username),
@@ -442,12 +446,15 @@ def watch_profile(request,user_id):#this function is used when user watch anothe
 
 
 def create_comment(request,user_id):#this function is used when user add comment
+
     if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
     user=UserInfo.objects.get(name=request.user.username)#get information for this user
     another_people = UserInfo.objects.get(id=user_id)#get id user that you want to comment
+
     if request.POST.get ('comment'):  # if user comment
         comment_form = CommentForm(data=request.POST)  # get form
+
         if comment_form.is_valid():  # check form is valid
 
             # Create Comment object but don't save to database yet
@@ -464,10 +471,12 @@ def create_comment(request,user_id):#this function is used when user add comment
 
 
 def delete_comment(request,user_id):#this function is used when user remove comment
+
     if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
     user = UserInfo.objects.get(name=request.user.username)  # get information for this user
     another_people = UserInfo.objects.get(id=user_id)  # get id user that you want to comment
+
     if request.POST.get(user.firstname+'_delete_comment'):  # remove comment
         if Comment.objects.get(id=request.POST[user.firstname+'_delete_comment']).name == UserInfo.objects.get(name=request.user.username).name:  # comment.name must equal username who posted this comment
             delete_comment = Comment.objects.get(id=request.POST[user.firstname+'_delete_comment'])  # get comment that should be remove
@@ -476,18 +485,21 @@ def delete_comment(request,user_id):#this function is used when user remove comm
 
 
 
-def edit_profile(request,user_id):#this function is used when user edit his/her profile
-    if not request.user.is_authenticated:
+def edit_profile(request):#this function is used when user edit his/her profile
+
+    if not request.user.is_authenticated:#check if user do not login
         return HttpResponseRedirect('/login')
+
     User = UserInfo.objects.get(name=request.user.username)#get user data
     picture = Profilepicture.objects.get(user= User)#get user Profile picture
+
     if request.method == "POST":#if user submit edit profile
-        form = Editprofileform(request.POST,instance=User)#form infomation user
+        form = Editprofileform(request.POST,instance=User,initial={'birthday':User.birthday})#form infomation user
         formpic = profilepicture(request.POST,request.FILES,instance=picture)#form user Profile picture
         if form.is_valid() and formpic.is_valid():#check form is valid
             form.save()#save data
             formpic.save()#save data
-            return HttpResponseRedirect(reverse('tinder:personal_profile', args=(user_id,)))#redirect
+            return HttpResponseRedirect(reverse('tinder:personal_profile'))#redirect
 
     else: #user do not submit to edit profile
         form = Editprofileform(instance=User)

@@ -10,141 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
-'''from django.contrib.gis.gdal import driver'''
-'''
-class NewVisitorTest(unittest.TestCase):
-
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def test_can_start_a_search_list_and_retrieve_it_later(self):
-        # Edith has heard about a cool finding tutor app. She goes
-        # to check out its homepage
-        self.browser.get('http://localhost:8000/')
-
-        # She notices the page title and header mention Tinder-for-EDU
-        self.assertIn('Match-and-Learn', self.browser.title)
-        header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertIn('Match and Learn', header_text)
-        welocome_text = self.browser.find_element_by_tag_name('h2').text
-        self.assertIn('Welcome, Guest!', welocome_text)
-
-
-        # She notices login and sign up hyperlink
-        login_link = self.browser.find_element_by_link_text('login').text
-        self.assertIn('login', login_link)
-        signup_link = self.browser.find_element_by_link_text('signup').text
-        self.assertIn('login', login_link)
-
-
-        # She is invited to enter a subjects straight away
-        search_text = self.browser.find_element_by_tag_name('p').text
-        self.assertIn("search for some one you're looking for" ,search_text)
-        inputbox = self.browser.find_element_by_id('subject_find_id')
-        self.assertEqual(
-
-        inputbox.get_attribute('placeholder'),
-                'Enter a subject'
-            )
-
-        # She types "Math2" into a text box
-        inputbox.send_keys('Math2')
-
-        # When she hits enter, the page updates, and now
-        # the page show lists of people who are good at Math2
-        inputbox.send_keys(Keys.ENTER)
-        time.sleep(10)
-        table = self.browser.find_element_by_id('find_result')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: watcharawut', [row.text for row in rows])
-
-
-
-
-        self.fail('Finish the test!')
-
-        # Satisfied, she goes back to sleep
-
-
-
-'''
-
-'''
-class signUp(unittest.TestCase):
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def test_can_sign_up_and_retrieve_it_later(self):
-        # Edith wants to be a member so she clicks sign up link
-        self.browser.get('http://localhost:8000/signup')
-
-        # She notices the header mention Sign up
-        self.assertIn('', self.browser.title)
-        header_text = self.browser.find_element_by_tag_name('h2').text
-        self.assertIn('Sign up', header_text)
-
-        # She is invited to enter an Username
-        label_username = self.browser.find_element_by_id('id_label_username').text
-        self.assertIn('Username:', label_username)
-        inputbox_username = self.browser.find_element_by_id('id_username')
-        self.assertEqual(
-        inputbox_username.get_attribute('type'),
-                'text'
-            )
-
-        # She is invited to enter a password
-        label_password = self.browser.find_element_by_id('id_label_password').text
-        self.assertIn('Password:', label_password)
-        inputbox_password = self.browser.find_element_by_id('id_password')
-        self.assertEqual(
-        inputbox_password.get_attribute('type'),
-                'password'
-            )
-
-        # She is invited to enter a password confirmation
-        label_passwordconfirm = self.browser.find_element_by_id('id_label_passwordconfirm').text
-        self.assertIn('Password confirmation:', label_passwordconfirm)
-        inputbox_passwordconfirm = self.browser.find_element_by_id('id_passwordconfirm')
-        self.assertEqual(
-        inputbox_passwordconfirm.get_attribute('type'),
-                'password'
-            )
-
-        # She types "Edith" into Username text box
-        inputbox_username.send_keys('Edith')
-
-        # She types "123456" into Password text box
-        inputbox_password.send_keys('qwertyuiop[]')
-
-        # She types "123456" again into Password confirmation text box
-        inputbox_passwordconfirm.send_keys('qwertyuiop[]')
-        input_first_name = self.browser.find_element_by_id("id_first_name")
-        input_first_name.send_keys("tu")
-        input_last_name = self.browser.find_element_by_id("id_last_name")
-        input_last_name.send_keys("pobthorn")
-        input_email = self.browser.find_element_by_id("id_email")
-        input_email.send_keys("ragr@gmail.com")
-        input_college = self.browser.find_element_by_id("id_college")
-        # then she notices Sign up button and click it
-        input_college.send_keys('kmuntb')
-        signup_button = self.browser.find_element_by_id('id_signup')
-        self.assertEqual(
-        signup_button.get_attribute('type'),
-                'submit',
-            )
-
-        signup_button.send_keys(Keys.ENTER)
-        time.sleep(10)
-'''
-
-
-"""class YourSubject(unittest.TestCase):
+class FunctionalTest(unittest.TestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
 
@@ -156,247 +22,18 @@ class signUp(unittest.TestCase):
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row.text for row in rows])
 
-
-
-    def test_can_add_and_remove_good_subject(self):
-        # Pure wants to add his good subject so he clicks good subject link
-        self.browser.get('http://127.0.0.1:8000/66/your_subject/')
-
-        # he notices the header mention Enter your good subject
-        self.assertIn('', self.browser.title)
-        header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertIn('Enter your good subject', header_text)
-
-        # he notices his url_room_name
-        name_text = self.browser.find_element_by_tag_name('h2').text
-        self.assertIn('url_room_name :pakkapure', name_text)
-
-        # he notices his age
-        age_text = self.browser.find_element_by_id('age_id').text
-        self.assertIn('age: 18', age_text)
-
-        # he notices his school
-        school_text = self.browser.find_element_by_id('school_id').text
-        self.assertIn("school: king mongkut's university of technology north bangkok", school_text)
-
-        # he is invited to enter his good subjects
-        inputbox = self.browser.find_element_by_id('subject_good_id')
-        self.assertEqual(
-        inputbox.get_attribute('placeholder'),
-                'Enter a subject'
-            )
-
-        # he notices add button
-        inputbox = self.browser.find_element_by_name('add_button')
-        self.assertEqual(
-        inputbox.get_attribute('type'),
-                'submit'
-            )
-
-        # he notices remove button
-        inputbox = self.browser.find_element_by_name('remove_button')
-        self.assertEqual(
-        inputbox.get_attribute('type'),
-                'submit'
-            )
-
-        # he types "Math2" into a text box
-        inputbox = self.browser.find_element_by_id('subject_good_id')
-        inputbox.send_keys('Math2')
-
-        # When he hits enter, the page updates, and now
-        # the page show lists of his good subject
-        inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
-        self.check_for_row_in_list_table('1: Math2')
-
-        # There is still a text box inviting his to add another subject.
-        # he enters "Physic"
-        inputbox = self.browser.find_element_by_id('subject_good_id')
-        inputbox.send_keys('Physic')
-        inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
-
-        # The page updates again, and now shows both subject on his list
-        self.check_for_row_in_list_table('1: Math2')
-        self.check_for_row_in_list_table('2: Physic')
-
-        # but he is not good at Physic.
-        # he selects Physic checkbox to remove it
+    def check_for_row_not_in_list_table(self, row_text):
         table = self.browser.find_element_by_id('good_subject_table')
-        checkbox = table.find_element_by_id('subject_name:2')
-        checkbox.click()
-        remove_select = self.browser.find_element_by_id("remove_button_id")
-        remove_select.send_keys(Keys.ENTER)
-        time.sleep(2)
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertNotIn(row_text, [row.text for row in rows])
 
-
-
-"""
-
-"""
-class Chat(unittest.TestCase):
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser2 = webdriver.Chrome()
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def test_can_send_message(self):
-        # Pure wants to chat with Tong so he login and clicks their chat room link.
-        self.browser.get('http://127.0.0.1:8001/login')
-        username_box = self.browser.find_element_by_name('username')
-        password_box = self.browser.find_element_by_name('password')
-        username_box.send_keys('pure')
-        password_box.send_keys("qwertyuiop[]" + "\\")
-        login_button = self.browser.find_element_by_tag_name('button')
-        login_button.click()
-        time.sleep(2)
-
-        # Tong wants to chat with Pure so he login and clicks their chat room link.
-        self.browser2.get('http://127.0.0.1:8001/login')
-        username_box = self.browser2.find_element_by_name('username')
-        password_box = self.browser2.find_element_by_name('password')
-        username_box.send_keys('tongu19541')
-        password_box.send_keys("qwertyuiop[]" + "\\")
-        login_button = self.browser2.find_element_by_tag_name('button')
-        login_button.click()
-        time.sleep(2)
-
-        # They enter chat room together.
-        self.browser.get('http://127.0.0.1:8001/chat/tongu19541_pure112_room/')
-        self.browser2.get('http://127.0.0.1:8001/chat/tongu19541_pure112_room/')
-        time.sleep(5)
-
-        # Pure and Tong notices the page title and header mention "Chat Room" with correct user
-        self.assertIn('Chat Room', self.browser.title)
-        usercheck = self.browser.find_element_by_tag_name('h2').text
-        self.assertIn('Login as : pure', usercheck)
-        self.assertIn('Chat Room', self.browser2.title)
-        usercheck2 = self.browser2.find_element_by_tag_name('h2').text
-        self.assertIn('Login as : tongu19541', usercheck2)
-
-        # Pure and Tong notices the chat textarea
-        chatbox = self.browser.find_element_by_id('chat-log')
-        chatbox2 = self.browser2.find_element_by_id('chat-log')
-
-        # Pure and Tong notices the chat textbox
-        chat_textbox = self.browser.find_element_by_id('chat-message-input')
-        self.assertEqual(
-            chat_textbox.get_attribute('type'),
-            'text'
-        )
-        chat_textbox2 = self.browser2.find_element_by_id('chat-message-input')
-        self.assertEqual(
-            chat_textbox2.get_attribute('type'),
-            'text'
-        )
-
-        # Pure and Tong notices the send button
-        send_button = self.browser.find_element_by_id('chat-message-submit')
-        self.assertEqual(
-            send_button.get_attribute('type'),
-            'button'
-        )
-        send_button2 = self.browser2.find_element_by_id('chat-message-submit')
-        self.assertEqual(
-            send_button2.get_attribute('type'),
-            'button'
-        )
-
-        # Pure types message "Hi"
-        chat_textbox.send_keys('Hi')
-        time.sleep(2)
-
-        # Pure clicks the send button.
-        send_button.click()
-        time.sleep(2)
-
-        # Pure notices his message is send in textarea
-        self.assertEqual(
-            chatbox.get_attribute('value'),
-            'pure : Hi\n'
-        )
-
-        # Pure types message "I'm Pure"
-        chat_textbox.send_keys("I'm Pure")
-        time.sleep(2)
-
-        send_button.click()
-        time.sleep(2)
-
-        # Pure notices his message is send in textarea
-        self.assertEqual(
-            chatbox.get_attribute('value'),
-            'pure : Hi\n'
-            "pure : I'm Pure\n"
-        )
-
-        # Then, Tong notices that Pure sent message
-        self.assertEqual(
-            chatbox2.get_attribute('value'),
-            'pure : Hi\n'
-            "pure : I'm Pure\n"
-        )
-
-        # Tong types "Hello"
-        chat_textbox2.send_keys('Hello')
-        time.sleep(2)
-
-        # Tong clicks the send button.
-        send_button2.click()
-        time.sleep(2)
-
-        # Tong notices the message was sent.
-        self.assertEqual(
-            chatbox2.get_attribute('value'),
-            'pure : Hi\n'
-            "pure : I'm Pure\n"
-            "tongu19541 : Hello\n"
-        )
-
-        # Tong types message "I'm Tong"
-        chat_textbox2.send_keys("I'm Tong")
-        time.sleep(2)
-
-        send_button2.click()
-        time.sleep(2)
-
-        # Tong notices the message was sent.
-        self.assertEqual(
-            chatbox2.get_attribute('value'),
-            'pure : Hi\n'
-            "pure : I'm Pure\n"
-            "tongu19541 : Hello\n"
-            "tongu19541 : I'm Tong\n"
-        )
-        time.sleep(2)
-        # Pure notices that the message from Tong was arrived.
-        self.assertEqual(
-            chatbox.get_attribute('value'),
-            'pure : Hi\n'
-            "pure : I'm Pure\n"
-            "tongu19541 : Hello\n"
-            "tongu19541 : I'm Tong\n"
-        )
-        time.sleep(2)
-"""
-
-
-class signup(unittest.TestCase):
-
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def can_sign_up(self):
+    def a_can_sign_up(self):
         # tiffany wants to be a member so she clicks sign up link
-        self.browser.get('http://localhost:8000/signup')
+        self.browser.get('http://localhost:8000/')
         time.sleep(1)
 
+        signup_link=self.browser.find_element_by_xpath("//a[@href='/signup/']")
+        signup_link.click()
         # She is invited to enter an information
         # She enters username and she notices the username label
         username_label = self.browser.find_element_by_id('Username_label').text
@@ -471,13 +108,377 @@ class signup(unittest.TestCase):
 
         signup_button.click()
         time.sleep(10)
-class check_birthday(unittest.TestCase):
 
-    def setUp(self):
-        self.browser = webdriver.Firefox()
+    def _b_user_can_see_another_profile_and_can_search_subect(self):
 
-    def tearDown(self):
-        self.browser.quit()
+        # Tiffany login to Match and Learn website
+        self.browser.get('http://127.0.0.1:8000/login')
+        username_box = self.browser.find_element_by_id('id_username')
+        password_box = self.browser.find_element_by_id('id_password')
+        username_box.send_keys('Tiffany')
+        password_box.send_keys("Tiffany_password456")
+        login_button = self.browser.find_element_by_xpath('//button[@type="submit"]')
+        login_button.click()
+        time.sleep(2)
+
+        # she go to find her tutor that can teach her math2 so she enter subject into subject field
+        tutor_find_box = self.browser.find_element_by_name('tutor_find')
+        tutor_find_box.send_keys('Math2')
+        time.sleep(2)
+
+        # she clicks at seach button
+        seach_button=self.browser.find_element_by_id('search_button')
+        seach_button.click()
+
+        # she see kitsanapong profile and she click it
+        kitsanapong_profile= self.browser.find_element_by_name('kitsanapong')
+        kitsanapong_profile.click()
+        time.sleep(2)
+
+        # she see his name
+        name_kitsanapong = self.browser.find_element_by_id('name_user').text
+        self.assertEqual('kitsanapong rodjing',name_kitsanapong)
+
+        # she see his age
+        age_kitsanapong = self.browser.find_element_by_id('age_id').text
+        self.assertIn('age: 31', age_kitsanapong)
+
+        # she see his school
+        school_kitsanapong = self.browser.find_element_by_id('school_id').text
+        self.assertIn('school: kmutnb', school_kitsanapong)
+
+        # she see his gender
+        gender_kitsanapong = self.browser.find_element_by_id('gender').text
+        self.assertIn('gender: Female', gender_kitsanapong)
+
+        # she see his expertise subject and know his expertise subject is math2
+        expertise_kitsanapong=self.browser.find_element_by_xpath('//h3[text()="math2"]').text
+        self.assertIn('math2',expertise_kitsanapong)
+
+
+    def c_watch_personal_profile_and_add_or_remove_expertise_subject(self):
+        # tiffany wants to add her good subject so she go to match and learn website
+        self.browser.get('http://127.0.0.1:8000/login')
+
+        # tiffany login
+        username_box = self.browser.find_element_by_id('id_username')
+        password_box = self.browser.find_element_by_id('id_password')
+        username_box.send_keys('Tiffany')
+        password_box.send_keys("Tiffany_password456")
+        login_button = self.browser.find_element_by_xpath('//button[@type="submit"]')
+        login_button.click()
+        time.sleep(2)
+
+        # she clicks at profile button
+        personal_button = self.browser.find_element_by_id('personal_profile_id')
+        personal_button.click()
+        time.sleep(1)
+
+        # she notices the header mention Add your expertise subject
+        header_text = self.browser.find_element_by_xpath('//h2[text()="Add your expertise subject"]').text
+        self.assertEqual(header_text,'Add your expertise subject')
+
+
+        # she enter her expertise subjects
+        inputbox = self.browser.find_element_by_id('subject_good_id')
+
+        # she types "english" into a text box
+        inputbox.send_keys('english')
+
+        # she notices add button and she clicks it
+        addbutton = self.browser.find_element_by_name('add_button')
+        addbutton.click()
+        time.sleep(2)
+        self.check_for_row_in_list_table('1: english')
+
+        # she types "computer" into a text box
+        inputbox = self.browser.find_element_by_id('subject_good_id')
+        inputbox.send_keys('computer')
+        # she notices add button and she clicks it
+        addbutton = self.browser.find_element_by_name('add_button')
+        addbutton.click()
+        time.sleep(2)
+        self.check_for_row_in_list_table('2: computer')
+
+        # she types "physic" into a text box
+        inputbox = self.browser.find_element_by_id('subject_good_id')
+        inputbox.send_keys('physic')
+
+        # she notices add button and she clicks it
+        addbutton = self.browser.find_element_by_name('add_button')
+        addbutton.click()
+        time.sleep(2)
+        self.check_for_row_in_list_table('3: physic')
+
+        # she notices checkbox at the orther her expertise subject and remove button
+        remove_button = self.browser.find_element_by_name('remove_button')
+        english_check_box=self.browser.find_element_by_id('english')
+        physic_check_box = self.browser.find_element_by_id('physic')
+        # she forget that she do not good at english and physic then she clicks at english check box and click remove it
+        english_check_box.click()
+        physic_check_box.click()
+        remove_button.click()
+
+        # she do not see subjects that she remove
+        self.check_for_row_not_in_list_table('1: english')
+        self.check_for_row_not_in_list_table('3: physic')
+
+        # she see computer subject that she like
+        self.check_for_row_in_list_table('1: computer')
+        time.sleep(1)
+
+
+    def _d_match_other_user(self):
+        # Tiffany login to Match and Learn website
+        self.browser.get('http://127.0.0.1:8000/login')
+        username_box = self.browser.find_element_by_id('id_username')
+        password_box = self.browser.find_element_by_id('id_password')
+        username_box.send_keys('Tiffany')
+        password_box.send_keys("Tiffany_password456")
+        login_button = self.browser.find_element_by_xpath('//button[@type="submit"]')
+        login_button.click()
+        time.sleep(2)
+
+        # she go to find her tutor that can teach her math2 so she enter subject into subject field
+        tutor_find_box = self.browser.find_element_by_name('tutor_find')
+        tutor_find_box.send_keys('Math2')
+        time.sleep(2)
+
+        # she clicks at seach button
+        seach_button = self.browser.find_element_by_id('search_button')
+        seach_button.click()
+
+        # she see kitsanapong profile and she click it
+        kitsanapong_profile = self.browser.find_element_by_name('kitsanapong')
+        kitsanapong_profile.click()
+        time.sleep(2)
+
+        # she see match button
+        match_button=self.browser.find_element_by_name('match')
+        self.assertEqual(match_button.text,'MATCH')
+
+        # she want to tell something to him before matching
+        tell_something_about_you=self.browser.find_element_by_name('text_request')
+        tell_something_about_you.send_keys('I do not good at math2 so can you teach me?')
+
+        # she clicks it because she want him to be her tutor
+        match_button.click()
+        time.sleep(2)
+
+        # she see match button
+        match_button = self.browser.find_element_by_name('Unmatched')
+        self.assertEqual(match_button.text, 'UNMATCHED')
+
+    def _e_accept_match_request(self):
+        #kitsanapong login
+        self.browser.get('http://127.0.0.1:8000/login')
+        username_box = self.browser.find_element_by_id('id_username')
+        password_box = self.browser.find_element_by_id('id_password')
+        username_box.send_keys('watcharawut007')
+        password_box.send_keys("tongu4590")
+        login_button = self.browser.find_element_by_xpath('//button[@type="submit"]')
+        login_button.click()
+
+        '''# he see a notification maybe someone was sent student request to him
+        notifycount = self.browser.find_element_by_name('value_notificate').text
+        self.assertIn(notifycount, '1')'''
+        # then, he click on student request page
+        student_request_page = self.browser.find_element_by_name('Match request')
+        student_request_page.click()
+        time.sleep(2)
+
+        # he saw Tiffany is the one who was sent request to him
+
+        # he saw Tiffany name
+        tiffany_info_name = self.browser.find_element_by_xpath('//h1[text()="Tiffany Warren"]')
+        self.assertIn(tiffany_info_name.text, 'Tiffany Warren')
+
+        # he saw Tiffany age
+        tiffany_info_age = self.browser.find_element_by_xpath('//p[text()=" age: 31"]')
+        self.assertIn(tiffany_info_age.text, ' age: 31')
+
+        #he click on tiffany request
+        tiffany_box = self.browser.find_element_by_name('Tiffany_request')
+        tiffany_box.click()
+
+        # he see a short message I do not good at math2 so can you teach me?
+        tiffany_message = self.browser.find_element_by_xpath('//h3[text()="Tiffany leave a short message for you : I do not good at math2 so can you teach me?"]')
+        self.assertEqual(tiffany_message.text,'Tiffany leave a short message for you : I do not good at math2 so can you teach me?')
+
+        #he see that he can choose to accept request or decline request then he choose accept
+        accept_button = self.browser.find_element_by_id('accept_button_id')
+        time.sleep(1)
+        accept_button.click()
+        time.sleep(2)
+
+        # he go to student and tutor list to see tiffany
+        student_tutor_button = self.browser.find_element_by_name('Students and Tutor list')
+        student_tutor_button.click()
+
+        # he go to see tiffany profile
+        tiffany_box = self.browser.find_element_by_id('Tiffany')
+        tiffany_box.click()
+
+        # he saw that now he's match with Tiffany.
+        # He can now choose to unmatched but he don't want to do it.
+        unmatch_button=self.browser.find_element_by_name('unmatch')
+        self.assertEqual(unmatch_button.text,'UNMATCHED')
+
+    #COMMENT
+    def can_comment_to_another_user_who_matched_with_him_and_can_delete_it(self):
+        # watcharawut login to Match and Learn website
+        self.browser.get('http://127.0.0.1:8000/login')
+        username_box = self.browser.find_element_by_name('username')  # user see the username field
+        password_box = self.browser.find_element_by_name('password')  # user see the password field
+        username_box.send_keys('watcharawut009')
+        password_box.send_keys("tongu20068")
+
+        # He notices the login button and he click it
+        login_button = self.browser.find_element_by_tag_name('button')
+        login_button.click()
+        time.sleep(2)
+
+        # He go to student and tutor list
+        student_and_tutor_list_btn = self.browser.find_element_by_id('tutor_student_list_id')
+        student_and_tutor_list_btn.click()
+        time.sleep(2)
+
+        # He click on kitsanapong profile
+        kitsanapong_profile = self.browser.find_element_by_id('kitsanapong')
+        kitsanapong_profile.click()
+        time.sleep(2)
+
+        # He enter comment  "kitsanapong is a good student"
+        comment = self.browser.find_element_by_id('id_comment')
+        comment.send_keys("kitsanapong is a good student")
+        time.sleep(2)
+
+        # So, He give score to kitsanapong 4 star
+        self.browser.find_element_by_xpath("//select[@name='star']/option[text()='4']").click()
+
+        # He submit comment
+        comment_button = self.browser.find_element_by_id('comment_submit_id')
+        comment_button.click()
+        time.sleep(2)
+
+        # He saw comment that he posted
+        comment_text = self.browser.find_element_by_id('watcharawut').text
+        self.assertEqual(comment_text, "Comment : kitsanapong is a good student")
+        time.sleep(2)
+
+        # He thinks he want to delete his comment maybe he change his mine
+        comment_delete_button = self.browser.find_element_by_id('watcharawut_delete_comment')
+        comment_delete_button.click()
+        time.sleep(2)
+
+        # he try to count amount comment that he saw in the kitsanapong profile
+        amount_comment = len(self.browser.find_elements_by_id('watcharawut'))
+
+        # amount comment equal 0
+        self.assertEqual(0, amount_comment)
+
+    def user_can_not_delete_another_user_comment(self):
+        # kitsanapong login to Match and Learn website
+        self.browser.get('http://127.0.0.1:8000/login')
+        username_box = self.browser.find_element_by_name('username')  # user see the username field
+        password_box = self.browser.find_element_by_name('password')  # user see the password field
+        username_box.send_keys('watcharawut007')
+        password_box.send_keys("tongu4590")
+
+        # He notices the login button and he click it
+        login_button = self.browser.find_element_by_tag_name('button')
+        login_button.click()
+        time.sleep(2)
+
+        # He go to student and tutor list
+        student_and_tutor_list_btn = self.browser.find_element_by_id('tutor_student_list_id')
+        student_and_tutor_list_btn.click()
+        time.sleep(2)
+
+        # He click on watcharawut  profile
+        watcharwaut_profile = self.browser.find_element_by_id('watcharawut')
+        watcharwaut_profile.click()
+        time.sleep(2)
+
+        # He enter comment  "i can not understand everything that he taught me"
+        comment = self.browser.find_element_by_id('id_comment')
+        comment.send_keys("i can not understand everything that he taught me")
+        time.sleep(2)
+
+        # So, He give score to watcharawut 2 star
+        self.browser.find_element_by_xpath("//select[@name='star']/option[text()='2']").click()
+
+        # He submit comment
+        comment_button = self.browser.find_element_by_id('comment_submit_id')
+        comment_button.click()
+        time.sleep(2)
+
+        # He saw comment that he posted
+        comment_text = self.browser.find_element_by_id('kitsanapong').text
+        self.assertEqual(comment_text, "Comment : i can not understand everything that he taught me")
+        time.sleep(2)
+
+        # He saw Theeraphat comment that he thinks that it is lie and he try to delete it
+        another_comment = self.browser.find_element_by_id('Theeraphat').text
+        self.assertEqual(another_comment, "Comment : he is good teacher")
+
+        # He try to find remove button on the theeraphat comment
+        remove_comment_button = len(self.browser.find_elements_by_id('Theeraphat_delete_comment'))
+
+        # He can not find
+        self.assertEqual(0, remove_comment_button)
+
+    def j_user_can_chat_to_each_other(self):
+        # Add browser to use in test
+        browser2 = webdriver.Edge("msedgedriver.exe")
+        # Kitsanapong and Nattakrit login to Match and Learn
+        self.browser.get('http://127.0.0.1:8000/login')
+        browser2.get('http://127.0.0.1:8000/login')
+        username_box = self.browser.find_element_by_id('id_username')
+        username_box.send_keys('kitsanapong')
+        username_box = browser2.find_element_by_id('id_username')
+        username_box.send_keys('nattakrit')
+        password_box = self.browser.find_element_by_id('id_password')
+        password_box.send_keys("1qaz2wsx3edc4rfv5tgb")
+        password_box = browser2.find_element_by_id('id_password')
+        password_box.send_keys("1qaz2wsx3edc4rfv5tgb")
+        login_button = self.browser.find_element_by_id('login_btn')
+        login_button.click()
+        login_button = browser2.find_element_by_id('login_btn')
+        login_button.click()
+        time.sleep(2)
+        # They go to chat room
+        self.browser.get('http://127.0.0.1:8000/chat/kitsanapong_nattakrit/')
+        browser2.get('http://127.0.0.1:8000/chat/kitsanapong_nattakrit/')
+        # Kitsanapong type "Hi, I'm Kay." to Nattakrit
+        comment_input = self.browser.find_element_by_id('chat-message-input')
+        comment_input.send_keys('''Hi, I'm Kay.''')
+        time.sleep(2)
+        comment_btn = self.browser.find_element_by_id('chat-message-submit')
+        comment_btn.click()
+        time.sleep(2)
+        # Kitsanapong saw message that he was sent on right textarea
+        message_sent_by_kitsanapong = self.browser.find_element_by_id('chat-log')
+        self.assertIn('''kitsanapong : Hi, I'm Kay.''', message_sent_by_kitsanapong.get_attribute('value'))
+        # Nattakrit receive message from Kitsanapong
+        message_receive_from_kitsanapong = browser2.find_element_by_id('chat-log2')
+        self.assertIn('''kitsanapong : Hi, I'm Kay.''', message_receive_from_kitsanapong.get_attribute('value'))
+        # Nattakrit answer Kitsanapong "Hi Kay! I'm Tong."
+        comment_input = browser2.find_element_by_id('chat-message-input')
+        comment_input.send_keys('''Hi Kay! I'm Tong.''')
+        time.sleep(2)
+        comment_btn = browser2.find_element_by_id('chat-message-submit')
+        comment_btn.click()
+        time.sleep(2)
+        # Nattakrit saw message that he was sent on right textarea
+        message_sent_by_nattakrit = browser2.find_element_by_id('chat-log')
+        self.assertIn('''nattakrit : Hi Kay! I'm Tong.''', message_sent_by_nattakrit.get_attribute('value'))
+        # Kitsanapong receive message from Nattakrit
+        message_receive_from_nattakrit = self.browser.find_element_by_id('chat-log2')
+        self.assertIn('''nattakrit : Hi Kay! I'm Tong.''', message_receive_from_nattakrit.get_attribute('value'))
+        time.sleep(2)
+        browser2.quit()
+
 
     def user_check_his_age_and_another_user(self):
         if datetime.now().year == 2020:
@@ -535,8 +536,6 @@ class check_birthday(unittest.TestCase):
             birthday_user = self.browser.find_element_by_id('birthday_id').text
             self.assertIn(birthday_user, 'birthday: April 25, 1989')
             time.sleep(2)
-
-
     def  user_check_his_age_and_another_user_when_1_year_past(self):
         if  datetime.now().year == 2021:
             self.browser.get('http://127.0.0.1:8000/login')  # user go to login page
@@ -594,113 +593,6 @@ class check_birthday(unittest.TestCase):
             self.assertIn(birthday_user, 'birthday: April 25, 1989')
             time.sleep(2)
 
-class remove_comment(unittest.TestCase):
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-
-    def tearDown(self):
-        self.browser.quit()
-    def user_can_comment_to_another_user_who_matched_with_him_and_can_delete_it(self):
-        # watcharawut login to Match and Learn website
-        self.browser.get('http://127.0.0.1:8000/login')
-        username_box = self.browser.find_element_by_name('username')  # user see the username field
-        password_box = self.browser.find_element_by_name('password')  # user see the password field
-        username_box.send_keys('watcharawut009')
-        password_box.send_keys("tongu20068")
-
-        # He notices the login button and he click it
-        login_button = self.browser.find_element_by_tag_name('button')
-        login_button.click()
-        time.sleep(2)
-
-        # He go to student and tutor list
-        student_and_tutor_list_btn = self.browser.find_element_by_id('tutor_student_list_id')
-        student_and_tutor_list_btn.click()
-        time.sleep(2)
-
-        # He click on kitsanapong profile
-        kitsanapong_profile = self.browser.find_element_by_id('kitsanapong')
-        kitsanapong_profile.click()
-        time.sleep(2)
-
-        # He enter comment  "kitsanapong is a good student"
-        comment = self.browser.find_element_by_id('id_comment')
-        comment.send_keys("kitsanapong is a good student")
-        time.sleep(2)
-
-        # So, He give score to kitsanapong 4 star
-        self.browser.find_element_by_xpath("//select[@name='star']/option[text()='4']").click()
-
-        # He submit comment
-        comment_button = self.browser.find_element_by_id('comment_submit_id')
-        comment_button.click()
-        time.sleep(2)
-
-        # He saw comment that he posted
-        comment_text = self.browser.find_element_by_id('watcharawut').text
-        self.assertEqual(comment_text, "Comment : kitsanapong is a good student")
-        time.sleep(2)
-
-        # He thinks he want to delete his comment maybe he change his mine
-        comment_delete_button = self.browser.find_element_by_id('watcharawut_delete_comment')
-        comment_delete_button.click()
-        time.sleep(2)
-
-        #he try to count amount comment that he saw in the kitsanapong profile
-        amount_comment=len(self.browser.find_elements_by_id('watcharawut'))
-
-        #amount comment equal 0
-        self.assertEqual(0,amount_comment)
-    def user_can_not_delete_another_user_comment(self):
-        #kitsanapong login to Match and Learn website
-        self.browser.get('http://127.0.0.1:8000/login')
-        username_box = self.browser.find_element_by_name('username')  # user see the username field
-        password_box = self.browser.find_element_by_name('password')  # user see the password field
-        username_box.send_keys('watcharawut007')
-        password_box.send_keys("tongu4590")
-
-        # He notices the login button and he click it
-        login_button = self.browser.find_element_by_tag_name('button')
-        login_button.click()
-        time.sleep(2)
-
-        # He go to student and tutor list
-        student_and_tutor_list_btn = self.browser.find_element_by_id('tutor_student_list_id')
-        student_and_tutor_list_btn.click()
-        time.sleep(2)
-
-        # He click on watcharawut  profile
-        watcharwaut_profile = self.browser.find_element_by_id('watcharawut')
-        watcharwaut_profile.click()
-        time.sleep(2)
-
-        # He enter comment  "i can not understand everything that he taught me"
-        comment = self.browser.find_element_by_id('id_comment')
-        comment.send_keys("i can not understand everything that he taught me")
-        time.sleep(2)
-
-        # So, He give score to watcharawut 2 star
-        self.browser.find_element_by_xpath("//select[@name='star']/option[text()='2']").click()
-
-        # He submit comment
-        comment_button = self.browser.find_element_by_id('comment_submit_id')
-        comment_button.click()
-        time.sleep(2)
-
-        # He saw comment that he posted
-        comment_text = self.browser.find_element_by_id('kitsanapong').text
-        self.assertEqual(comment_text, "Comment : i can not understand everything that he taught me")
-        time.sleep(2)
-
-        # He saw Theeraphat comment that he thinks that it is lie and he try to delete it
-        another_comment = self.browser.find_element_by_id('Theeraphat').text
-        self.assertEqual(another_comment,"Comment : he is good teacher")
-
-        #He try to find remove button on the theeraphat comment
-        remove_comment_button = len(self.browser.find_elements_by_id('Theeraphat_delete_comment'))
-
-        #He can not find
-        self.assertEqual(0, remove_comment_button)
 
 
 if __name__ == '__main__':

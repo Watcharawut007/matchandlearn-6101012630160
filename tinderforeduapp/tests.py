@@ -8,11 +8,10 @@ from django.contrib.auth.models import User
 from tinderforeduapp.models import *
 from django.conf import settings
 from tinderforeduapp.views import home_page, personal_profile
+from django.contrib.auth.views import LoginView
 from tinderforeduapp import views
 class birthday_function_Test(TestCase):
-    def test_URL_mapping_to_homepage(self):
-        found = resolve('/')
-        self.assertEqual(found.func, home_page)
+
     def user_look_at_his_age_and_another_user(self):
         views.datetime_now = date(2020, 4, 1) #today is 1/4/2020
         # 2 users is signin
@@ -174,6 +173,10 @@ class user_is_authenticated(TestCase):
         subject_object2 = Subject.objects.create(subject_name='Math2', keyword_subject='math2')
         kitsanapong_user.expertise.add(subject_object2)
 
+        #load profile picture kitsanapong(this first time that he use this website profile picture is default.png)
+        picture2 = Profilepicture.objects.create(user=kitsanapong_user)
+
+
         # anonymous people who does not login try to connect in to this website with enter url
 
         # anonymous people enter personal profile url for watch kitsanapong profile
@@ -181,17 +184,20 @@ class user_is_authenticated(TestCase):
 
         # if he can not go in,templates will show a login template that have a link to sign up
         self.assertContains(respone_personal_profile,'New to Match and Learn? Sign up now!')
+        self.assertTemplateUsed(respone_personal_profile,'registration/login.html')
 
         # anonymous people enter watch profile url for watch to kitsanapong profile
         respone_watch_profile = self.client.post(reverse('tinder:watch_profile', args=[kitsanapong_user.id]),
                                                     follow=True)
 
         # if he can not go in,templates will show a login template that have a link to sign up
-        self.assertContains(respone_watch_profile, 'New to Match and Learn? Sign up now!')
+        self.assertContains(respone_personal_profile, 'New to Match and Learn? Sign up now!')
+        self.assertTemplateUsed(respone_personal_profile, 'registration/login.html')
 
-        # anonymous people enter watch  url for watch people that kitsanapong matched
+        # anonymous people enter tutor student list url for see people that kitsanapong matched
         respone_tutor_student_lists = self.client.post(reverse('tinder:tutor_student_list', args=[kitsanapong_user.id]),
                                                     follow=True)
 
         # if he can not go in,templates will show a login template that have a link to sign up
         self.assertContains(respone_tutor_student_lists, 'New to Match and Learn? Sign up now!')
+        self.assertTemplateUsed(respone_personal_profile, 'registration/login.html')
