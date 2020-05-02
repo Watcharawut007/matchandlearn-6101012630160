@@ -401,7 +401,7 @@ def tutor_student_list(request):#this function is used to display tutor or stude
         key = UserInfo.objects.get(name=i.another_user)#get people in key
         #sorted for create url chat
         key.check_birthday(datetime_now)
-        list_sort = sorted([UserInfo.objects.get(name=request.user.username).name, UserInfo.objects.get(name=i.myself).name])
+        list_sort = sorted([UserInfo.objects.get(name=request.user.username).name, UserInfo.objects.get(name=i.another_user).name])
         value = list_sort[0]+"_"+list_sort[1]
         list_match[key]=value #let value be a url chat and key be a user model
     return render(request, 'tinder/tutor_students_list.html',

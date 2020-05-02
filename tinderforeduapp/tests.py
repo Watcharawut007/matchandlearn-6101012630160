@@ -93,7 +93,7 @@ class birthday_function_Test(TestCase):
         watch_another_profile = self.client.post('/' + str(kitsanapong_user.id) + '/profile/')
         self.assertContains(watch_another_profile, 'age: 31')
 
-    def user_can_comment_to_another_user_who_matched_with_him_and_can_delete_it(self):
+    def test_user_can_comment_to_another_user_who_matched_with_him_and_can_delete_it(self):
         # 2 users is signin
         watcharawut = User.objects.create_user('watcharawut009', 'hiruma157@hotmail.com', 'tongu20068')
         kitsanapong = User.objects.create_user('watcharawut007', 'hiruma158@hotmail.com', 'tongu4590')
@@ -130,22 +130,17 @@ class birthday_function_Test(TestCase):
         self.client.force_login(User.objects.get_or_create(username='watcharawut009')[0])
 
         # he watch his profile and see his age is 20
-        watch_tutor_student_profile = self.client.post('/'+ str(watcharawut_user.id) + '/tutor_student_list/')
+        watch_tutor_student_profile = self.client.post('/'+'tutor_student_list/')
         self.assertContains(watch_tutor_student_profile,'Kitsanapong rodjing')
 
         watch_kitsanpong_profile = self.client.post('/' + str(kitsanapong_user.id) + '/watch_profile/')
         self.assertContains(watch_kitsanpong_profile,kitsanapong_user.firstname)
-        add_comment_kitsanpong_profile = self.client.post(reverse('tinder:comment_manage',args=[kitsanapong_user.id]),data={'comment': 'he is a good teacher', 'star': '5'},follow=True)
+        add_comment_kitsanpong_profile = self.client.post(reverse('tinder:create_comment',args=[kitsanapong_user.id]),data={'comment': 'he is a good teacher', 'star': '5'},follow=True)
         self.assertContains(add_comment_kitsanpong_profile,'he is a good teacher')
         comment_obj = Comment.objects.get(post=kitsanapong_user,name=watcharawut_user.name,comment='he is a good teacher',)
-
-        comment_detect = Comment.objects.filter(post=kitsanapong_user, name=watcharawut_user.name,
-                                                comment='he is a good teacher').exists()
-        print('before delete comment,comment still exists=',comment_detect)
-        remove_comment_kitsanapong_profile = self.client.post(reverse('tinder:comment_manage',args=[kitsanapong_user.id]),{'remove_comment':str(comment_obj.id)},follow=True)
+        remove_comment_kitsanapong_profile = self.client.post(reverse('tinder:delete_comment',args=[kitsanapong_user.id]),{watcharawut_user.firstname+'_delete_comment':str(comment_obj.id)},follow=True)
         self.assertNotContains(remove_comment_kitsanapong_profile,'he is a good teacher')
-        comment_detect =  Comment.objects.filter(post=kitsanapong_user,name=watcharawut_user.name,comment='he is a good teacher').exists()
-        print('after delete comment,comment still exists=', comment_detect)
+
 
 
 
@@ -180,7 +175,7 @@ class user_is_authenticated(TestCase):
         # anonymous people who does not login try to connect in to this website with enter url
 
         # anonymous people enter personal profile url for watch kitsanapong profile
-        respone_personal_profile=self.client.post(reverse('tinder:personal_profile',args=[kitsanapong_user.id]),follow=True)
+        respone_personal_profile=self.client.post(reverse('tinder:personal_profile'),follow=True)
 
         # if he can not go in,templates will show a login template that have a link to sign up
         self.assertContains(respone_personal_profile,'New to Match and Learn? Sign up now!')
@@ -195,7 +190,7 @@ class user_is_authenticated(TestCase):
         self.assertTemplateUsed(respone_personal_profile, 'registration/login.html')
 
         # anonymous people enter tutor student list url for see people that kitsanapong matched
-        respone_tutor_student_lists = self.client.post(reverse('tinder:tutor_student_list', args=[kitsanapong_user.id]),
+        respone_tutor_student_lists = self.client.post(reverse('tinder:tutor_student_list'),
                                                     follow=True)
 
         # if he can not go in,templates will show a login template that have a link to sign up
